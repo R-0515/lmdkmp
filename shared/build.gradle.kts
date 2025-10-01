@@ -25,12 +25,24 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation("io.ktor:ktor-client-core:2.3.7")
+
+            // JSON serialization
+            implementation("io.ktor:ktor-client-content-negotiation:2.3.7")
+            implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.7")
+
+            // Auth (Bearer, etc.)
+            implementation("io.ktor:ktor-client-auth:2.3.7")
+
+            // Logging
+            implementation("io.ktor:ktor-client-logging:2.3.7")
             // put your Multiplatform dependencies here
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.websockets)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.serialization.json)
 
+            implementation("androidx.security:security-crypto:1.1.0-alpha06")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
