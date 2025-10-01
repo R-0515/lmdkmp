@@ -40,7 +40,7 @@ fun MyLocationMap(
     GoogleMap(
         modifier = modifier.fillMaxSize(),
         cameraPositionState = cameraState,
-        properties = MapProperties(isMyLocationEnabled = false), // marker only, no blue dot
+        properties = MapProperties(isMyLocationEnabled = false),
         uiSettings = MapUiSettings(
             zoomControlsEnabled = true,
             myLocationButtonEnabled = false
