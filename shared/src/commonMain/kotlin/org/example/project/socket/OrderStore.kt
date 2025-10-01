@@ -11,7 +11,6 @@ internal class OrderStore {
     private val orderChannel = Channel<Order>(Channel.UNLIMITED)
 
     fun getChannel(): Channel<Order> = orderChannel
-
     fun add(order: Order) {
         val list = _state.value.toMutableList()
         if (list.none { it.id == order.id }) {

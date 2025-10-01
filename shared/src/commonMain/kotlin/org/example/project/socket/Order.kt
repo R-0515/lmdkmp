@@ -28,7 +28,6 @@ data class Order(
     @SerialName("partner_id") val partnerId: String? = null,
 
     @SerialName("dc_id") val dcId: String? = null,
-
     @SerialName("order_date") @JsonNames("order_date", "orderDate")
     val orderDate: String? = null,
 

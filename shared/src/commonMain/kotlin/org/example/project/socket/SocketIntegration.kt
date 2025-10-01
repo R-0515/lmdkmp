@@ -25,7 +25,6 @@ private const val WS_CLOSE_NORMAL = 1000
 private const val HTTP_UNAUTHORIZED = 401
 private const val DEFAULT_RETRY_DELAY_MS = 3000L
 private const val HEARTBEAT_INTERVAL_MS = 28_000L
-
 class SocketIntegration(
     private val baseWsUrl: String,
     private val client: HttpClient,

@@ -15,7 +15,6 @@ kotlin = "2.2.20"
 kotlinxCoroutinesCore = "1.9.0"
 ktor = "2.3.12"
 kotlinxSerialization = "1.7.3"
-
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }

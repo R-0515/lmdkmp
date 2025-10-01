@@ -93,7 +93,6 @@ internal class MessageRouter(
     }
 }
 
-
 private fun JsonElement.asObjOrNull(): JsonObject? =
     (this as? JsonObject) ?: runCatching { this.jsonObject }.getOrNull()
 

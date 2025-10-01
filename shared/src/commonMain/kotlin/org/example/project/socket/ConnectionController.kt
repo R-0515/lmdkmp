@@ -80,7 +80,6 @@ internal class ConnectionController(
         job.cancelAndJoin()
     }
 }
-
 internal interface ConnectionListener {
     fun onOpen()
     fun onClosed(code: Int, reason: String)

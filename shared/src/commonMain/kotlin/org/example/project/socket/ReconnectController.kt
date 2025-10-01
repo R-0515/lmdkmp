@@ -11,7 +11,6 @@ internal class ReconnectController(
 ) {
     private val logTag = "LMD-WS"
     private var job: Job? = null
-
     fun schedule(delayMs: Long) {
         cancel()
         job = scope.launch {
