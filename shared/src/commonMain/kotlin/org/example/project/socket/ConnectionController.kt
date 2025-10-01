@@ -13,6 +13,7 @@ import io.ktor.client.request.url
 import io.ktor.websocket.readText
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.isActive
+import org.example.project.SecureTokenStore
 import kotlin.coroutines.CoroutineContext
 
 private const val WS_CLOSE_NORMAL = 1000
