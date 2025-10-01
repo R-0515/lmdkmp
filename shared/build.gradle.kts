@@ -1,3 +1,4 @@
+import org.gradle.kotlin.dsl.implementation
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -24,10 +25,24 @@ kotlin {
     
     sourceSets {
         commonMain.dependencies {
+            // Coroutines
+            implementation(libs.kotlinx.coroutines.core)
             // put your Multiplatform dependencies here
+            //Koin
+            implementation(libs.koin.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+        }
+        androidMain.dependencies {
+            //Koin
+            implementation(libs.koin.android)
+
+            // Google Maps
+            implementation(libs.play.services.maps)
+            implementation(libs.maps.compose)
+            implementation(libs.play.services.location)
+
         }
     }
 }

@@ -14,13 +14,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
-
+import com.google.android.gms.location.LocationServices
 import lmd.composeapp.generated.resources.Res
 import lmd.composeapp.generated.resources.compose_multiplatform
+import org.example.project.location.screen.permissions.locationPermissionHandler
 
 @Composable
-@Preview
 fun App() {
     MaterialTheme {
         var showContent by remember { mutableStateOf(false) }
@@ -34,6 +33,21 @@ fun App() {
             Button(onClick = { showContent = !showContent }) {
                 Text("Click me!")
             }
+
+            locationPermissionHandler(
+                onPermissionGranted =
+                    @androidx.annotation.RequiresPermission(
+                        allOf = [
+                            android.Manifest.permission.ACCESS_FINE_LOCATION,
+                            android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                        ],
+                    ) { ctx ->
+                        val fused = LocationServices.getFusedLocationProviderClient(ctx)
+                        fused.lastLocation.addOnSuccessListener { loc ->
+                        }
+                    },
+            )
+
             AnimatedVisibility(showContent) {
                 val greeting = remember { Greeting().greet() }
                 Column(
