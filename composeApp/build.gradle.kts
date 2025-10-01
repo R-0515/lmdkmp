@@ -18,12 +18,13 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            // Google Maps
+            implementation(libs.play.services.maps)
+            implementation(libs.maps.compose)
+            implementation(libs.play.services.location)
             // Compose
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
-            // Google Maps
-            implementation("com.google.android.gms:play-services-maps:18.2.0")
-            implementation("com.google.maps.android:maps-compose:4.4.1")
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -35,6 +36,8 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(projects.shared)
+            //Koin
+            implementation(libs.koin.android)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
