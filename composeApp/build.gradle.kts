@@ -25,6 +25,8 @@ kotlin {
             // Compose
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation("com.google.android.gms:play-services-location:21.0.1")
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
         }
         commonMain.dependencies {
             implementation(compose.runtime)
