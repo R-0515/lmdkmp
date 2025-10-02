@@ -1,4 +1,6 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
+import kotlin.apply
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -27,6 +29,19 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation("com.google.android.gms:play-services-location:21.0.1")
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
+            // Google Maps
+            implementation(libs.play.services.maps)
+            implementation(libs.maps.compose)
+            implementation(libs.play.services.location)
+            // Compose
+            implementation(compose.preview)
+            implementation(libs.androidx.activity.compose)
+            implementation("com.google.android.gms:play-services-location:21.0.1")
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
+            //  Koin for Compose (Android only)
+            implementation("io.insert-koin:koin-android:3.5.6")
+            implementation("io.insert-koin:koin-androidx-compose:3.5.6")
+
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -38,8 +53,10 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(projects.shared)
+            implementation("androidx.navigation:navigation-compose:2.8.4")
             //Koin
             implementation(libs.koin.android)
+
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -50,19 +67,39 @@ kotlin {
 android {
     namespace = "org.example.project"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
-
+    buildFeatures {
+        buildConfig = true
+    }
     defaultConfig {
         applicationId = "org.example.project"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // inject the API key into the APP manifest
         val mapsKey = (project.findProperty("MAPS_API_KEY") as String?)
             ?: System.getenv("MAPS_API_KEY") ?: ""
         manifestPlaceholders["MAPS_API_KEY"] = mapsKey
+
+        val envFile = rootProject.file(".env")
+        val props =
+            Properties().apply {
+                if (envFile.exists()) {
+                    envFile.inputStream().use { this.load(it) }
+                }
+            }
+        val baseUrl = props.getProperty("BASE_URL") ?: error("Missing BASE_URL in .env")
+        val wsBaseUrl = props.getProperty("WS_BASE_URL") ?: error("Missing WS_BASE_URL in .env")
+        val supaKey = props.getProperty("SUPABASE_KEY") ?: error("Missing SUPABASE_KEY in .env")
+
+        buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+        buildConfigField("String", "WS_BASE_URL", "\"$wsBaseUrl\"")
+        buildConfigField("String", "SUPABASE_KEY", "\"$supaKey\"")
+
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -81,5 +118,8 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
+    // Ktor (Android engine + websockets) used by SocketPlayground
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.ktor.client.websockets)
 }
 
