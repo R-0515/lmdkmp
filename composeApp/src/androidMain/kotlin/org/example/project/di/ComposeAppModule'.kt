@@ -6,5 +6,5 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val composeAppModule = module {
-    viewModel { LoginViewModel(loginUseCase = get<LoginUseCase>()) }
+    viewModel { LoginViewModel(get()) }
 }

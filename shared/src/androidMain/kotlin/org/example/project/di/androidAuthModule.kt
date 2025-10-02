@@ -16,14 +16,13 @@ import org.example.project.auth.domain.usecase.LoginUseCase
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
-
 // in your DI module
 import org.koin.core.qualifier.named
 
 val androidAuthModule = module {
     single<SecureTokenStore> { SecureTokenStoreImpl(androidContext()) }
 
-    // Base client (no auth) - used only for refresh API
+    // Base client (no auth) - only for refresh
     single<HttpClient>(named("baseClient")) {
         HttpClient(OkHttp) {
             install(ContentNegotiation) {
@@ -36,27 +35,26 @@ val androidAuthModule = module {
         }
     }
 
-    // Refresh API uses the base client
+    // Refresh API uses base client
     single<AuthApi>(named("refreshApi")) {
         AuthApi(get(named("baseClient")))
     }
 
-    // Main HttpClient with token auth & logging
-    single<HttpClient> {
+    // Main client with token auth & logging
+    single<HttpClient>(named("mainClient")) {
         KtorClientProvider.create(
             store = get(),
             supabaseKey = BuildKonfig.SUPABASE_KEY,
-            refreshApi = get(named("refreshApi")) // avoids recursion
+            refreshApi = get(named("refreshApi"))
         )
     }
 
-    // Main AuthApi (for login etc.) uses the main client
-    single { AuthApi(get()) }
+    // Main AuthApi (for login etc.)
+    single<AuthApi> { AuthApi(get(named("mainClient"))) }
 
-    // Repo / Use case
+    // Repository
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
+
+
     factory { LoginUseCase(get()) }
 }
-
-
-

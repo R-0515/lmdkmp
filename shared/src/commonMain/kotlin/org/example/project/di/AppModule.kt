@@ -6,7 +6,6 @@ import org.example.project.location.data.repository.LocationRepositoryImpl
 import org.example.project.location.domain.repository.LocationRepository
 import org.example.project.location.domain.usecase.GetDeviceLocationsUseCase
 import org.koin.dsl.module
-import org.example.project.NetworkMonitor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

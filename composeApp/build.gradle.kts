@@ -53,8 +53,10 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(projects.shared)
+            implementation("androidx.navigation:navigation-compose:2.8.4")
             //Koin
             implementation(libs.koin.android)
+
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

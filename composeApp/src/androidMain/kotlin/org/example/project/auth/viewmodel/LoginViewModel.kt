@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.example.project.auth.data.model.LoginData
 import org.example.project.auth.domain.usecase.LoginUseCase
+import org.example.project.core.utils.ApiResult
 
 sealed class LoginUiState {
     object Idle : LoginUiState()
@@ -25,17 +26,13 @@ class LoginViewModel(
     fun login(email: String, password: String) {
         viewModelScope.launch {
             _uiState.value = LoginUiState.Loading
-            try {
-                val response = loginUseCase(email, password)
-
-                if (response.success && response.data != null) {
-                    _uiState.value = LoginUiState.Success(response.data!!)
-                } else {
-                    _uiState.value =
-                        LoginUiState.Error(response.error ?: "Invalid email or password")
+            when (val result = loginUseCase(email, password)) {
+                is ApiResult.Success -> {
+                    _uiState.value = LoginUiState.Success(result.data)
                 }
-            } catch (e: Exception) {
-                _uiState.value = LoginUiState.Error(e.message ?: "Unknown error")
+                is ApiResult.Error -> {
+                    _uiState.value = LoginUiState.Error(result.message)
+                }
             }
         }
     }

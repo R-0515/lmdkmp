@@ -9,48 +9,29 @@ import org.example.project.auth.data.model.LoginData
 import org.example.project.auth.data.model.RefreshTokenRequest
 import org.example.project.auth.data.model.ApiResponse
 
-fun HttpClientConfig<*>.installTokenAuth(
-    store: SecureTokenStore,
-    refreshApi: AuthApi
-) {
+fun HttpClientConfig<*>.installTokenAuth(store: SecureTokenStore, refreshApi: AuthApi) {
     install(Auth) {
         bearer {
-            // Load current tokens from storage
             loadTokens {
                 val access = store.getAccessToken()
                 val refresh = store.getRefreshToken()
                 if (access != null && refresh != null) {
                     BearerTokens(access, refresh)
-                } else {
-                    null
-                }
+                } else null
             }
-
-            // Refresh tokens when a 401 occurs
             refreshTokens {
                 val rt = store.getRefreshToken() ?: return@refreshTokens null
-
-                // Call API to refresh tokens
-                val response: ApiResponse<LoginData> =
-                    refreshApi.refreshToken(RefreshTokenRequest(rt))
-
-                return@refreshTokens if (response.success && response.data != null) {
-                    val data: LoginData = response.data
-
-                    // Save new tokens
+                val response = refreshApi.refreshToken(RefreshTokenRequest(rt))
+                if (response.success && response.data != null) {
+                    val data = response.data
                     store.saveFromPayload(
                         data.accessToken,
                         data.refreshToken,
                         data.expiresAt,
                         data.refreshExpiresAt
                     )
-
-                    BearerTokens(
-                        data.accessToken ?: return@refreshTokens null,
-                        data.refreshToken ?: return@refreshTokens null
-                    )
+                    BearerTokens(data.accessToken!!, data.refreshToken!!)
                 } else {
-                    // Clear store if refresh fails
                     store.clear()
                     null
                 }

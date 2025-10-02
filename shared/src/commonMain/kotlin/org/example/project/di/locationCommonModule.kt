@@ -1,5 +1,6 @@
 package org.example.project.di
 
+import io.ktor.client.HttpClient
 import org.example.project.auth.data.AuthApi
 import org.example.project.SecureTokenStore
 import org.example.project.auth.data.AuthRepositoryImpl
@@ -10,26 +11,16 @@ import org.example.project.location.domain.repository.LocationRepository
 import org.example.project.location.domain.usecase.GetDeviceLocationsUseCase
 import org.koin.dsl.module
 
-val locationCommonModule = module {
-    // Repository API (depends on LocationProvider)
-    single<LocationRepository> { LocationRepositoryImpl(get()) }
-
-    // UseCase (depends on Repository)
-    factory { GetDeviceLocationsUseCase(get()) }
-}
+//val locationCommonModule = module {
+//    // Repository API (depends on LocationProvider)
+//    single<LocationRepository> { LocationRepositoryImpl(get()) }
+//
+//    // UseCase (depends on Repository)
+//    factory { GetDeviceLocationsUseCase(get()) }
+//}
 
 // shared/commonMain
 val authCommonModule = module {
-    // AuthApi
-    single { AuthApi(get()) }
-
-    // Repository
-    single<AuthRepository> {
-        AuthRepositoryImpl(
-            authApi = get(),
-            store = get() // SecureTokenStore
-        )
-    }
 
     // UseCase
     factory { LoginUseCase(get()) }
