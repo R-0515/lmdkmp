@@ -22,7 +22,9 @@ private fun Coordinates.toLatLng() = LatLng(latitude, longitude)
 @Composable
 fun MyLocationMap(
     location: Coordinates?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showMyLocationDot: Boolean = true,
+    showMyLocationButton: Boolean = true
 ) {
     val cameraState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(DEFAULT_FALLBACK.toLatLng(), DEFAULT_ZOOM)
@@ -40,10 +42,12 @@ fun MyLocationMap(
     GoogleMap(
         modifier = modifier.fillMaxSize(),
         cameraPositionState = cameraState,
-        properties = MapProperties(isMyLocationEnabled = false),
+        properties = MapProperties(
+            isMyLocationEnabled = showMyLocationDot && location != null
+        ),
         uiSettings = MapUiSettings(
             zoomControlsEnabled = true,
-            myLocationButtonEnabled = false
+            myLocationButtonEnabled = showMyLocationButton
         )
     ) {
         location?.let {
