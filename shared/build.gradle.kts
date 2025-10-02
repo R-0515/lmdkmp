@@ -30,6 +30,10 @@ kotlin {
             // put your Multiplatform dependencies here
             //Koin
             implementation(libs.koin.core)
+            //datetime
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.serialization.json)
+
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
