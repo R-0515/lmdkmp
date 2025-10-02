@@ -1,3 +1,4 @@
+import org.gradle.kotlin.dsl.implementation
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -24,6 +25,8 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            // Coroutines
+            implementation(libs.kotlinx.coroutines.core)
             implementation("io.ktor:ktor-client-core:2.3.7")
 
             // JSON serialization
@@ -42,17 +45,26 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
 
             implementation("androidx.security:security-crypto:1.1.0-alpha06")
+            //Koin
+            implementation(libs.koin.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
+        androidMain.dependencies {
+            //Koin
+            implementation(libs.koin.android)
+            implementation(libs.ktor.client.okhttp)
 
-            androidMain.dependencies {
-                implementation(libs.ktor.client.okhttp)
-            }
-            iosMain.dependencies {
-                implementation(libs.ktor.client.darwin)
-            }
+            // Google Maps
+            implementation(libs.play.services.maps)
+            implementation(libs.maps.compose)
+            implementation(libs.play.services.location)
+
+        }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
+        }
     }
 }
 
