@@ -6,26 +6,16 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import org.example.project.generalPool.domain.model.PagedOrdersResponse
 
-interface LiveOrdersApiService {
+class LiveOrdersApiService(private val client: HttpClient, private val baseUrl: String) {
     suspend fun getLiveOrdersPage(
         page: Int = 1,
         limit: Int = 50,
         search: String? = null
-    ): PagedOrdersResponse
-}
-
-class LiveOrdersApiServiceImpl(
-    private val client: HttpClient,
-    private val baseUrl: String,
-) : LiveOrdersApiService {
-    override suspend fun getLiveOrdersPage(
-        page: Int,
-        limit: Int,
-        search: String?
-    ): PagedOrdersResponse =
-        client.get("$baseUrl/live-orders") {
+    ): PagedOrdersResponse {
+        return client.get("$baseUrl/live-orders") {
             parameter("page", page)
             parameter("limit", limit)
             if (!search.isNullOrBlank()) parameter("search", search)
         }.body()
+    }
 }

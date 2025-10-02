@@ -1,8 +1,6 @@
 package org.example.project.di
 
-import io.ktor.client.HttpClient
 import org.example.project.generalPool.data.datasource.remote.LiveOrdersApiService
-import org.example.project.generalPool.data.datasource.remote.LiveOrdersApiServiceImpl
 import org.example.project.location.data.repository.LocationRepositoryImpl
 import org.example.project.location.domain.repository.LocationRepository
 import org.example.project.location.domain.usecase.ComputeDistancesUseCase
@@ -32,10 +30,10 @@ val generalPoolCommonModule = module {
     factory { ComputeDistancesUseCase() }
 
     // Api
-    single<LiveOrdersApiService> {
-        LiveOrdersApiServiceImpl(
-            get<HttpClient>(),
-            getProperty("BASE_URL")
+    single {
+        LiveOrdersApiService(
+            client = get(),
+            baseUrl = getProperty("BASE_URL")
         )
     }
 }
