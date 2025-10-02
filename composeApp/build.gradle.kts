@@ -41,6 +41,8 @@ kotlin {
             //  Koin for Compose (Android only)
             implementation("io.insert-koin:koin-android:3.5.6")
             implementation("io.insert-koin:koin-androidx-compose:3.5.6")
+            // horizontal line library
+            implementation("com.github.shsaudhrb:HorizontalList:0882e3c3a0")
 
         }
         commonMain.dependencies {
@@ -54,7 +56,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(projects.shared)
             implementation("androidx.navigation:navigation-compose:2.8.4")
-            //Koin
+            // Koin
             implementation(libs.koin.android)
 
         }

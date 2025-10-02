@@ -5,6 +5,8 @@ import org.example.project.di.androidAuthModule
 import org.example.project.di.authCommonModule
 import org.example.project.di.composeAppModule
 import org.example.project.di.SecureTokenAndroidModule
+import org.example.project.di.generalPoolAndroidModule
+import org.example.project.di.generalPoolCommonModule
 import org.example.project.di.locationAndroidModule
 import org.example.project.di.locationCommonModule
 import org.example.project.di.networkModule
@@ -28,6 +30,8 @@ class MyApp : Application() {
                     networkModule,
                     socketModule,
                     SecureTokenAndroidModule,
+                    generalPoolAndroidModule,
+                    generalPoolCommonModule
                 ),
             )
         }

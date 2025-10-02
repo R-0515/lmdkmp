@@ -11,7 +11,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import org.example.project.socket.SocketIntegration
 import org.example.project.BuildKonfig
-
+import org.example.project.generalPool.data.datasource.remote.LiveOrdersApiService
+import org.example.project.generalPool.data.repository.LiveOrdersRepositoryImpl
+import org.example.project.generalPool.domain.repository.LiveOrdersRepository
+import org.example.project.generalPool.domain.usecase.LoadOrdersUseCase
+import org.example.project.generalPool.domain.usecase.OrdersRealtimeUseCase
+import org.example.project.location.domain.usecase.ComputeDistancesUseCase
 
 val locationCommonModule = module {
     // Repository API (depends on LocationProvider)
@@ -41,3 +46,21 @@ val socketModule = module {
     }
 }
 
+val generalPoolCommonModule = module {
+
+    // repository
+    single<LiveOrdersRepository> { LiveOrdersRepositoryImpl(get()) }
+
+    // Use cases
+    factory { LoadOrdersUseCase(get<LiveOrdersRepository>()) }
+    factory { OrdersRealtimeUseCase(get<LiveOrdersRepository>()) }
+    factory { ComputeDistancesUseCase() }
+
+    // Api
+    single {
+        LiveOrdersApiService(
+            client = get(),
+            baseUrl = BuildKonfig.WS_BASE_URL,
+        )
+    }
+}
