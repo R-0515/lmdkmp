@@ -27,6 +27,13 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation("com.google.android.gms:play-services-location:21.0.1")
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
+
+            // horizontalList library
+            implementation("com.github.shsaudhrb:HorizontalList:0882e3c3a0")
+
+            // koin
+            implementation(libs.koin.compose)
+
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -40,6 +47,9 @@ kotlin {
             implementation(projects.shared)
             //Koin
             implementation(libs.koin.android)
+
+            // horizontalList library
+            implementation("com.github.shsaudhrb:HorizontalList:0882e3c3a0")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

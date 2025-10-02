@@ -7,28 +7,26 @@ import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
-
-/**This one is pure Kotlin math, so it lives in commonMain.
-No Android/iOS dependencies.**/
+import kotlin.math.PI
 
 class ComputeDistancesUseCase {
     companion object {
-        private const val METERS_IN_KM = 1000.0
         private const val EARTH_RADIUS_KM = 6371.0
         private const val MAX_LATITUDE = 90.0
         private const val MAX_LONGITUDE = 180.0
+        private const val DEG_TO_RAD = PI / 180.0
     }
+
+    private inline fun Double.rad(): Double = this * DEG_TO_RAD
 
     fun computeDistances(
         origin: Coordinates,
         targets: List<Coordinates>
-    ): List<Double> {
-        return targets.map { target ->
-            if (isValidLatLng(target.latitude, target.longitude)) {
-                distanceKm(origin, target)
-            } else {
-                Double.POSITIVE_INFINITY
-            }
+    ): List<Double> = targets.map { target ->
+        if (isValidLatLng(target.latitude, target.longitude)) {
+            distanceKm(origin, target)
+        } else {
+            Double.POSITIVE_INFINITY
         }
     }
 
@@ -40,15 +38,14 @@ class ComputeDistancesUseCase {
     }
 
     fun distanceKm(from: Coordinates, to: Coordinates): Double {
-        val dLat = Math.toRadians(to.latitude - from.latitude)
-        val dLng = Math.toRadians(to.longitude - from.longitude)
-        val lat1 = Math.toRadians(from.latitude)
-        val lat2 = Math.toRadians(to.latitude)
+        val dLat = (to.latitude - from.latitude).rad()
+        val dLng = (to.longitude - from.longitude).rad()
+        val lat1 = from.latitude.rad()
+        val lat2 = to.latitude.rad()
 
-        val a = sin(dLat / 2).pow(2.0) +
-                sin(dLng / 2).pow(2.0) * cos(lat1) * cos(lat2)
+        // Haversine
+        val a = sin(dLat / 2).pow(2.0) + cos(lat1) * cos(lat2) * sin(dLng / 2).pow(2.0)
         val c = 2 * atan2(sqrt(a), sqrt(1 - a))
-
         return EARTH_RADIUS_KM * c
     }
 }
