@@ -1,16 +1,16 @@
 package org.example.project.generalPool.domain.mapper
 
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
-import org.example.project.generalPool.domain.model.Order
 import org.example.project.generalPool.domain.model.OrderInfo
 import org.example.project.generalPool.domain.model.OrderStatus
 import org.example.project.generalPool.domain.model.RelativeTime
+import org.example.project.socket.Order
 import kotlin.math.abs
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
-import kotlin.time.Instant
 
 private const val MINUTE_MS = 60_000L
 private const val HOUR_MS = 3_600_000L
@@ -56,8 +56,8 @@ private fun formatRelative(then: Long?): RelativeTime {
 }
 
 fun Order.toUi(): OrderInfo {
-    val lat = coordinates?.latitude ?: latitude ?: 0.0
-    val lng = coordinates?.longitude ?: longitude ?: 0.0
+    val lat = coordinates?.lat ?: latitude ?: 0.0
+    val lng = coordinates?.lng ?: longitude ?: 0.0
 
     val whenMillis =
         parseToEpochMillis(lastUpdated)

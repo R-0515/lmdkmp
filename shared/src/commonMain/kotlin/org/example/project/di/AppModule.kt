@@ -39,7 +39,7 @@ val socketModule = module {
 
     single {
         SocketIntegration(
-            baseWsUrl =  BuildKonfig.WS_BASE_URL,
+            baseWsUrl = BuildKonfig.WS_BASE_URL,
             client = get(),
             tokenStore = get()
         )
@@ -49,7 +49,11 @@ val socketModule = module {
 val generalPoolCommonModule = module {
 
     // repository
-    single<LiveOrdersRepository> { LiveOrdersRepositoryImpl(get()) }
+    single<LiveOrdersRepository> {
+        LiveOrdersRepositoryImpl(
+            get(), get()
+        )
+    }
 
     // Use cases
     factory { LoadOrdersUseCase(get<LiveOrdersRepository>()) }

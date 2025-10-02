@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import org.example.project.auth.ui.EmptyScreen
 import org.example.project.auth.ui.LoginScreen
+import org.example.project.generalPool.generalPoolScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,7 +25,7 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(navController = navController, startDestination = "login") {
                     composable("login") { LoginScreen(navController) }
-                    composable("empty") { EmptyScreen() }
+                    composable("empty") { generalPoolScreen(navController) }
                 }
             }
         }

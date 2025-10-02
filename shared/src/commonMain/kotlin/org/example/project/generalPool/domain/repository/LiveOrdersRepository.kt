@@ -1,21 +1,22 @@
 package org.example.project.generalPool.domain.repository
 
-import org.example.project.generalPool.domain.model.Order
+import kotlinx.coroutines.flow.StateFlow
+import org.example.project.socket.Order
 
 interface LiveOrdersRepository {
     suspend fun getAllLiveOrders(pageSize: Int): Result<List<Order>>
 
-//    fun connectToOrders(channelName: String = "orders")
+    fun connectToOrders(channelName: String = "orders")
 
-//    fun disconnectFromOrders()
+    fun disconnectFromOrders()
 
-//    fun retryConnection()
+    fun retryConnection()
 
-//    fun updateOrderStatus(
-//        orderId: String,
-//        status: String,
-//    )
+    fun updateOrderStatus(
+        orderId: String,
+        status: String,
+    )
 
-//    fun orders(): StateFlow<List<Order>>
+    fun orders(): StateFlow<List<Order>>
 
 }

@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
@@ -46,7 +47,7 @@ private const val ORDER_FOCUS_ZOOM = 14f
 
 @Composable
 fun generalPoolScreen(
-//    navController: NavController,
+    navController: NavController,
     generalPoolViewModel: GeneralPoolViewModel = koinViewModel(),
 ) {
     val context = LocalContext.current
@@ -74,7 +75,7 @@ fun generalPoolScreen(
         },
     )
 
-//    rememberSearchEffects(navController, generalPoolViewModel)
+//    rememberSearchEffects(navControlletroller, generalPoolViewModel)
 
     val focusOnOrder =
         rememberFocusOnOrder(generalPoolViewModel, markerState, cameraPositionState, scope)

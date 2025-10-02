@@ -15,10 +15,10 @@ import org.example.project.location.domain.usecase.ComputeDistancesUseCase
 import org.example.project.location.domain.usecase.GetDeviceLocationsUseCase
 import org.example.project.generalPool.domain.mapper.toUi
 import org.example.project.generalPool.domain.model.GeneralPoolUiState
-import org.example.project.generalPool.domain.model.Order
 import org.example.project.generalPool.domain.model.OrderInfo
 import org.example.project.generalPool.domain.usecase.LoadOrdersUseCase
 import org.example.project.generalPool.domain.usecase.OrdersRealtimeUseCase
+import org.example.project.socket.Order
 
 sealed class GeneralPoolUiEvent {
     data object RequestLocationPermission : GeneralPoolUiEvent()
@@ -69,18 +69,18 @@ class GeneralPoolController(
     }
 
     fun clear() {
-//        ordersRealtime.disconnect()
+        ordersRealtime.disconnect()
         realtimeJob?.cancel()
         realtimeStarted = false
     }
 
     private fun startRealtime() {
         realtimeStarted = true
-//        ordersRealtime.connect("orders")
+        ordersRealtime.connect("orders")
         realtimeJob?.cancel()
-//        realtimeJob = scope.launch {
-//            ordersRealtime.orders().collect { handleLiveOrders(it) }
-//        }
+        realtimeJob = scope.launch {
+            ordersRealtime.orders().collect { handleLiveOrders(it) }
+        }
     }
 
     private suspend fun handleLiveOrders(liveOrders: List<Order>) {

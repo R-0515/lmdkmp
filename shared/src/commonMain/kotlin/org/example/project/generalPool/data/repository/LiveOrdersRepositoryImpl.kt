@@ -10,15 +10,16 @@ import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.intOrNull
 import org.example.project.generalPool.data.datasource.remote.LiveOrdersApiService
-import org.example.project.generalPool.domain.model.Order
 import org.example.project.generalPool.domain.model.PageInfo
 import org.example.project.generalPool.domain.model.PagedOrdersResponse
 import org.example.project.generalPool.domain.repository.LiveOrdersRepository
+import org.example.project.socket.Order
+import org.example.project.socket.SocketIntegration
 import kotlin.coroutines.cancellation.CancellationException
 
 class LiveOrdersRepositoryImpl(
     private val liveOrdersApi: LiveOrdersApiService,
-//    private val socket: SocketIntegration,
+    private val socket: SocketIntegration,
 ) : LiveOrdersRepository {
 
     // fetch all live orders with pagination support
@@ -49,31 +50,31 @@ class LiveOrdersRepositoryImpl(
         }
 
     // Connect to socket channel and start listening for live order updates
-//    override fun connectToOrders(channelName: String) {
-//        socket.connect(channelName)
-//        socket.startChannelListener()
-//    }
+    override fun connectToOrders(channelName: String) {
+        socket.connect(channelName)
+        socket.startChannelListener()
+    }
 
     // disconnect socket connection
-//    override fun disconnectFromOrders() {
-//        socket.disconnect()
-//    }
+    override fun disconnectFromOrders() {
+        socket.disconnect()
+    }
 
     // retry socket connection after failure
-//    override fun retryConnection() {
-//        socket.retryConnection()
-//    }
+    override fun retryConnection() {
+        socket.retryConnection()
+    }
 
     // send request to update order status through socket
-//    override fun updateOrderStatus(
-//        orderId: String,
-//        status: String,
-//    ) {
-//        socket.updateOrderStatus(orderId, status)
-//    }
+    override fun updateOrderStatus(
+        orderId: String,
+        status: String,
+    ) {
+        socket.updateOrderStatus(orderId, status)
+    }
 
     // expose live orders from socket as a flow
-//    override fun orders() = socket.orders
+    override fun orders() = socket.orders
 
 }
 
