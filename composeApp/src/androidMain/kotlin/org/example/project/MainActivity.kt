@@ -13,7 +13,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MaterialTheme {
-                NetworkStatusScreen(monitor)
+                //NetworkStatusScreen(monitor)
+                LoginScreen()
             }
         }
     }
