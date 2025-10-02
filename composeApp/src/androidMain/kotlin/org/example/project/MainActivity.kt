@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
-import androidx.activity.enableEdgeToEdge
 import org.example.project.map.screen.MapScreen
 
 class MainActivity : ComponentActivity() {
@@ -17,7 +16,6 @@ class MainActivity : ComponentActivity() {
             MaterialTheme {
                 NetworkStatusScreen(monitor)
                 MapScreen()
-                //NetworkStatusScreen(monitor)
                 LoginScreen()
             }
         }
