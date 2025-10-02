@@ -9,7 +9,6 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
-import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
@@ -22,7 +21,8 @@ private fun Coordinates.toLatLng() = LatLng(latitude, longitude)
 @Composable
 fun MyLocationMap(
     location: Coordinates?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showMyLocationDot: Boolean = true,
 ) {
     val cameraState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(DEFAULT_FALLBACK.toLatLng(), DEFAULT_ZOOM)
@@ -40,11 +40,9 @@ fun MyLocationMap(
     GoogleMap(
         modifier = modifier.fillMaxSize(),
         cameraPositionState = cameraState,
-        properties = MapProperties(isMyLocationEnabled = false),
-        uiSettings = MapUiSettings(
-            zoomControlsEnabled = true,
-            myLocationButtonEnabled = false
-        )
+        properties = MapProperties(
+            isMyLocationEnabled = showMyLocationDot && location != null
+        ),
     ) {
         location?.let {
             Marker(
