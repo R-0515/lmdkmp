@@ -29,6 +29,15 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation("com.google.android.gms:play-services-location:21.0.1")
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
+            // Google Maps
+            implementation(libs.play.services.maps)
+            implementation(libs.maps.compose)
+            implementation(libs.play.services.location)
+            // Compose
+            implementation(compose.preview)
+            implementation(libs.androidx.activity.compose)
+            implementation("com.google.android.gms:play-services-location:21.0.1")
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
             //  Koin for Compose (Android only)
             implementation("io.insert-koin:koin-android:3.5.6")
             implementation("io.insert-koin:koin-androidx-compose:3.5.6")
@@ -65,12 +74,13 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // inject the API key into the APP manifest
         val mapsKey = (project.findProperty("MAPS_API_KEY") as String?)
             ?: System.getenv("MAPS_API_KEY") ?: ""
         manifestPlaceholders["MAPS_API_KEY"] = mapsKey
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
         val envFile = rootProject.file(".env")
         val props =
             Properties().apply {
@@ -107,7 +117,7 @@ android {
 dependencies {
     debugImplementation(compose.uiTooling)
     // Ktor (Android engine + websockets) used by SocketPlayground
-    implementation(libs.ktor.client.okhttp.v330)
-    implementation(libs.ktor.client.websockets.v330)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.ktor.client.websockets)
 }
 

@@ -11,6 +11,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -24,9 +25,6 @@ import org.example.project.location.screen.permissions.locationPermissionHandler
 @Composable
 fun App() {
     MaterialTheme {
-        // Replace demo UI with your network status screen
-        val monitor = NetworkMonitor(LocalContext.current)
-        NetworkStatusScreen(monitor)
         var showContent by remember { mutableStateOf(false) }
         Column(
             modifier = Modifier
@@ -64,5 +62,8 @@ fun App() {
                 }
             }
         }
+        // Replace demo UI with your network status screen
+        val monitor = NetworkMonitor(LocalContext.current)
+        NetworkStatusScreen(monitor)
     }
 }

@@ -15,9 +15,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             MaterialTheme {
                 //NetworkStatusScreen(monitor)
-                LoginScreen()
                 //MapScreen()
+                LoginScreen()
             }
         }
     }
 }
+
+
