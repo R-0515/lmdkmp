@@ -1,6 +1,9 @@
 package org.example.project
 
 import android.app.Application
+import org.example.project.di.androidAuthModule
+import org.example.project.di.authCommonModule
+import org.example.project.di.composeAppModule
 import org.example.project.di.locationAndroidModule
 import org.example.project.di.locationCommonModule
 import org.koin.android.ext.koin.androidContext
@@ -15,7 +18,10 @@ class MyApp : Application() {
             modules(
                 listOf(
                     locationCommonModule,
-                    locationAndroidModule
+                    locationAndroidModule,
+                    authCommonModule,
+                    androidAuthModule,
+                    composeAppModule
                 ),
             )
         }

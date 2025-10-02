@@ -6,6 +6,7 @@ import org.example.project.location.domain.repository.LocationProvider
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
+
 val locationAndroidModule = module {
     // FusedLocationProviderClient (needs Context)
     single { LocationServices.getFusedLocationProviderClient(androidContext()) }
@@ -13,3 +14,4 @@ val locationAndroidModule = module {
     // Provider API (callback/suspend style)
     single<LocationProvider> { AndroidLocationProvider(get()) }
 }
+

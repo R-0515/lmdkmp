@@ -29,6 +29,10 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation("com.google.android.gms:play-services-location:21.0.1")
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
+            //  Koin for Compose (Android only)
+            implementation("io.insert-koin:koin-android:3.5.6")
+            implementation("io.insert-koin:koin-androidx-compose:3.5.6")
+
         }
         commonMain.dependencies {
             implementation(compose.runtime)
