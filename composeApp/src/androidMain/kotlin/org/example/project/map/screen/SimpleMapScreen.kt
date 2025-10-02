@@ -25,6 +25,5 @@ fun MapScreen(
     MyLocationMap(
         location = location,
         showMyLocationDot = true,
-        showMyLocationButton = true
     )
 }

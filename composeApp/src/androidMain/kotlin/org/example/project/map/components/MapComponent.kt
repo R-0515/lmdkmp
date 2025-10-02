@@ -24,7 +24,6 @@ fun MyLocationMap(
     location: Coordinates?,
     modifier: Modifier = Modifier,
     showMyLocationDot: Boolean = true,
-    showMyLocationButton: Boolean = true
 ) {
     val cameraState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(DEFAULT_FALLBACK.toLatLng(), DEFAULT_ZOOM)
@@ -45,10 +44,6 @@ fun MyLocationMap(
         properties = MapProperties(
             isMyLocationEnabled = showMyLocationDot && location != null
         ),
-        uiSettings = MapUiSettings(
-            zoomControlsEnabled = true,
-            myLocationButtonEnabled = showMyLocationButton
-        )
     ) {
         location?.let {
             Marker(
