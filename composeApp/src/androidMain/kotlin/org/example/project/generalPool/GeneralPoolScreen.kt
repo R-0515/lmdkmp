@@ -38,6 +38,7 @@ import org.example.project.map.components.mapCenter
 import org.example.project.map.domain.model.MapStates
 import org.example.project.R
 import org.example.project.generalPool.components.searchResultsDropdown
+import org.koin.androidx.compose.koinViewModel
 
 // Map / Camera behavior
 private const val INITIAL_MAP_ZOOM = 12f
@@ -87,7 +88,7 @@ fun generalPoolScreen(
             MapStates(cameraPositionState, markerState),
             deviceLatLng,
         )
-        poolBottomContent(ui, generalPoolViewModel, focusOnOrder, onAddToMe)
+//        poolBottomContent(ui, generalPoolViewModel, focusOnOrder, onAddToMe)
     }
 }
 
@@ -238,31 +239,31 @@ private fun searchDropdown(
     }
 }
 
-@Composable
-private fun rememberSearchEffects(
-//    navController: NavController,
-    viewModel: GeneralPoolViewModel,
-) {
-    LaunchedEffect(Unit) {
-        val handle = navController.currentBackStackEntry?.savedStateHandle ?: return@LaunchedEffect
-        handle.getStateFlow("searching", false).collect { searching ->
-            viewModel.onSearchingChange(searching)
-            if (!searching) viewModel.onSearchTextChange("")
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        val handle = navController.currentBackStackEntry?.savedStateHandle ?: return@LaunchedEffect
-        handle.getStateFlow("search_text", "").collect { text ->
-            viewModel.onSearchTextChange(text)
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        val handle = navController.currentBackStackEntry?.savedStateHandle ?: return@LaunchedEffect
-        handle.getStateFlow("search_submit", "").collect { /* ignore */ }
-    }
-}
+//@Composable
+//private fun rememberSearchEffects(
+////    navController: NavController,
+//    viewModel: GeneralPoolViewModel,
+//) {
+//    LaunchedEffect(Unit) {
+//        val handle = navController.currentBackStackEntry?.savedStateHandle ?: return@LaunchedEffect
+//        handle.getStateFlow("searching", false).collect { searching ->
+//            viewModel.onSearchingChange(searching)
+//            if (!searching) viewModel.onSearchTextChange("")
+//        }
+//    }
+//
+//    LaunchedEffect(Unit) {
+//        val handle = navController.currentBackStackEntry?.savedStateHandle ?: return@LaunchedEffect
+//        handle.getStateFlow("search_text", "").collect { text ->
+//            viewModel.onSearchTextChange(text)
+//        }
+//    }
+//
+//    LaunchedEffect(Unit) {
+//        val handle = navController.currentBackStackEntry?.savedStateHandle ?: return@LaunchedEffect
+//        handle.getStateFlow("search_submit", "").collect { /* ignore */ }
+//    }
+//}
 
 @Composable
 fun rememberFocusOnOrder(

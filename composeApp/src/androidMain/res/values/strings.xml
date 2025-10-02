@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LMD</string>
+    <string name="app_name">lmd</string>
     <!-- Login screen-->
     <string name="welcome_back">Welcome Back</string>
     <string name="agentId">Agent ID</string>

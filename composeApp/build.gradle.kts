@@ -31,8 +31,9 @@ kotlin {
             // horizontalList library
             implementation("com.github.shsaudhrb:HorizontalList:0882e3c3a0")
 
-            // koin
-            implementation(libs.koin.compose)
+            //Koin
+            implementation(libs.koin.android)
+            implementation(libs.koin.androidx.compose)
 
         }
         commonMain.dependencies {
