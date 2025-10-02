@@ -105,7 +105,7 @@ android {
 dependencies {
     debugImplementation(compose.uiTooling)
     // Ktor (Android engine + websockets) used by SocketPlayground
-    implementation(libs.ktor.client.okhttp.v330)
-    implementation(libs.ktor.client.websockets.v330)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.ktor.client.websockets)
 }
 

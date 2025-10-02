@@ -31,47 +31,38 @@ kotlin {
     }
 
     sourceSets {
-        commonMain.dependencies {
-            implementation("io.ktor:ktor-client-core:2.3.7")
+        val commonMain by getting {
+            dependencies {
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.content.negotiation)
+                implementation(libs.ktor.serialization.kotlinx.json)
+                implementation(libs.ktor.client.auth)
+                implementation(libs.ktor.client.logging)
 
-            // JSON serialization
-            implementation("io.ktor:ktor-client-content-negotiation:2.3.7")
-            implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.7")
-
-            // Auth (Bearer, etc.)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.client.auth)
-            implementation(libs.ktor.client.logging)
-
-            // Multiplatform dependencies
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.websockets)
-            implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.kotlinx.serialization.json)
-
-            implementation("androidx.security:security-crypto:1.1.0-alpha06")
-            //Koin
-            implementation(libs.koin.core)
-        }
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
+                // Multiplatform dependencies
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.websockets)
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.koin.core)
+            }
         }
 
-            androidMain.dependencies {
+        val androidMain by getting {
+            dependencies {
                 implementation(libs.ktor.client.okhttp)
                 implementation("androidx.security:security-crypto:1.1.0-alpha06")
-                //Koin
                 implementation(libs.koin.android)
                 // Google Maps
                 implementation(libs.play.services.maps)
                 implementation(libs.maps.compose)
                 implementation(libs.play.services.location)
-
-
             }
-            iosMain.dependencies {
-                implementation(libs.ktor.client.darwin)
-            }
+        }
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+        }
     }
 }
 
