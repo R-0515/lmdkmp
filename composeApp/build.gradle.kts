@@ -18,6 +18,8 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            //Navigation
+            implementation(libs.androidx.navigation.compose)
             // Google Maps
             implementation(libs.play.services.maps)
             implementation(libs.maps.compose)
@@ -27,6 +29,11 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation("com.google.android.gms:play-services-location:21.0.1")
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
+            // horizontal list library
+            implementation("com.github.shsaudhrb:HorizontalList:0882e3c3a0")
+            // vertical list library
+            implementation("com.github.etharalrehaili4:verticallist:834045a12a")
+
         }
         commonMain.dependencies {
             implementation(compose.runtime)

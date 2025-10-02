@@ -1,0 +1,40 @@
+package org.example.project.myPool.ui.logic.myOrderLogic
+
+class OrdersSearchLogic(
+    private val store: OrdersStore,
+    private val pageSize: Int = OrdersPaging.PAGE_SIZE,
+) {
+    fun applySearchQuery(raw: String) {
+        val q = raw.trim()
+        val base = currentFilteredFor(q, store.allOrders)
+
+        val end = base.size <= pageSize
+        val emptyMsg = if (base.isEmpty()) "No orders yet" else null
+
+        store.state.update {
+            it.copy(
+                query = q,
+                orders = base.take(pageSize),
+                page = 1,
+                endReached = end,
+                emptyMessage = emptyMsg,
+                isLoading = false,
+                isLoadingMore = false,
+                errorMessage = null,
+            )
+        }
+    }
+
+    private fun currentFilteredFor(
+        queryRaw: String,
+        all: List<OrderInfo>,
+    ): List<OrderInfo> {
+        val q = queryRaw.trim()
+        if (q.isBlank()) return all
+        return all.filter { o ->
+            o.orderNumber.contains(q, ignoreCase = true) ||
+                    o.name.contains(q, ignoreCase = true) ||
+                    (o.details?.contains(q, ignoreCase = true) == true)
+        }
+    }
+}
