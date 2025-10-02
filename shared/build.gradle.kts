@@ -1,3 +1,4 @@
+import org.gradle.kotlin.dsl.implementation
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 
@@ -43,6 +44,8 @@ kotlin {
                 implementation(libs.ktor.client.websockets)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlinx.serialization.json)
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.koin.core)
             }
         }
 
@@ -50,14 +53,16 @@ kotlin {
             dependencies {
                 implementation(libs.ktor.client.okhttp)
                 implementation("androidx.security:security-crypto:1.1.0-alpha06")
+                implementation(libs.koin.android)
+                // Google Maps
+                implementation(libs.play.services.maps)
+                implementation(libs.maps.compose)
+                implementation(libs.play.services.location)
             }
         }
-
-        //val iosMain by getting {
-          //  dependencies {
-               // implementation(libs.ktor.client.darwin)
-           // }
-       // }
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+        }
     }
 }
 
