@@ -9,10 +9,12 @@ import kotlinx.serialization.json.Json
 import org.example.project.BuildKonfig
 import org.example.project.SecureTokenStore
 import org.example.project.SecureTokenStoreImpl
+import org.example.project.UserStore
 import org.example.project.auth.data.AuthApi
 import org.example.project.auth.data.AuthRepositoryImpl
 import org.example.project.auth.domain.repository.AuthRepository
 import org.example.project.auth.domain.usecase.LoginUseCase
+import org.example.project.utils.AndroidUserStore
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -21,6 +23,9 @@ import org.koin.core.qualifier.named
 
 val androidAuthModule = module {
     single<SecureTokenStore> { SecureTokenStoreImpl(androidContext()) }
+
+    // Secure user store
+    single<UserStore> { AndroidUserStore(androidContext()) }
 
     // Base client (no auth) - only for refresh
     single<HttpClient>(named("baseClient")) {
@@ -56,5 +61,5 @@ val androidAuthModule = module {
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
 
 
-    factory { LoginUseCase(get()) }
+    factory { LoginUseCase(get(), get()) }
 }
