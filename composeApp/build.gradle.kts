@@ -61,11 +61,12 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
-            implementation(libs.androidx.lifecycle.runtimeCompose)
+           // implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(projects.shared)
             implementation("androidx.navigation:navigation-compose:2.8.4")
             //Koin
             implementation(libs.koin.android)
+            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
 
         }
         commonTest.dependencies {

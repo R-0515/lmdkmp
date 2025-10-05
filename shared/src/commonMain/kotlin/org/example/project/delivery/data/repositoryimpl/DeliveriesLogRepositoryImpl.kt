@@ -7,9 +7,12 @@ import org.example.project.delivery.domain.model.Page
 import org.example.project.delivery.domain.repository.DeliveriesLogRepository
 
 
+data class Page<T>(val items: List<T>, val hasNext: Boolean)
+
 class DeliveriesLogRepositoryImpl(
     private val api: DeliveriesLogApi,
 ) : DeliveriesLogRepository {
+
     override suspend fun getLogsPage(
         page: Int,
         limit: Int,
@@ -33,7 +36,10 @@ class DeliveriesLogRepositoryImpl(
         val data = env.data ?: return Page(emptyList(), hasNext = false)
 
         val items = data.orders.map { it.toDeliveryLog() }
-        val hasNext = data.pagination?.hasNextPage ?: false
+        val hasNext = data.pagination?.hasNextPage
+            ?: (data.pagination?.totalPages?.let { page < it } ?: (items.size == limit))
+
+        println("📦 Deliveries page=$page size=${items.size} hasNext=$hasNext")
         return Page(items, hasNext)
     }
 }

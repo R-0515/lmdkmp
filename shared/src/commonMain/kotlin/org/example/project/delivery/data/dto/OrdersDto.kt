@@ -2,6 +2,7 @@ package org.example.project.delivery.data.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
 
 @Serializable
 data class OrdersEnvelope(
@@ -53,8 +54,8 @@ data class OrderDto(
     @SerialName("last_updated")    val lastUpdated: String? = null,
     @SerialName("orderstatuses")   val orderstatuses: OrderStatusDto? = null,
     @SerialName("users")           val users: UserDto? = null,
-    val partners: Any? = null,
-    val distributioncenters: Any? = null,
+    val partners: JsonElement? = null,
+    val distributioncenters: JsonElement? = null,
     @SerialName("distance_km")     val distanceKm: Double? = null,
 )
 

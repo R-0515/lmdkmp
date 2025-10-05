@@ -5,16 +5,25 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.example.project.delivery.domain.model.DeliveryLog
-import org.example.project.delivery.domain.model.Page
 import org.example.project.delivery.domain.usecase.DeliveryStatusIds
 import org.example.project.delivery.domain.usecase.GetDeliveriesLogPageUseCase
 
-object OrdersPaging { const val PAGE_SIZE = 20 }
+object OrdersPaging {
+    const val PAGE_SIZE = 20
+}
+
+object DeliveryStatusIds {
+    const val CANCELLED = 3
+    const val FAILED = 7
+    const val DELIVERED = 8
+    val DEFAULT_LOG_STATUSES: List<Int> = listOf(CANCELLED, FAILED, DELIVERED)
+}
 
 class DeliveriesLogSharedViewModel(
     private val scope: CoroutineScope,
     private val getLogsUseCase: GetDeliveriesLogPageUseCase,
 ) {
+    // region === State ===
     private val _logs = MutableStateFlow<List<DeliveryLog>>(emptyList())
     val logs: StateFlow<List<DeliveryLog>> = _logs
 
@@ -24,31 +33,24 @@ class DeliveriesLogSharedViewModel(
     private val _endReached = MutableStateFlow(false)
     val endReached: StateFlow<Boolean> = _endReached
 
-    private val _isRefreshing = MutableStateFlow(true)
+    private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing
+    // endregion
 
-    private var lastRequested: Pair<Int, String?>? = null
-    private var generationCounter = 0
-
-    // paging state
-    private var page = 1
+    // region === Paging control ===
+    private var currentPage = 1
     private var hasNext = true
     private var currentQuery: String? = null
+    private var lastRequested: Pair<Int, String?>? = null
+    private var generationCounter = 0
+    // endregion
 
+    /** 🔹 Load first page */
     fun load() {
-        reset()
         scope.launch {
             _isRefreshing.value = true
-            try { fetchNext() } finally { _isRefreshing.value = false }
-        }
-    }
-
-    fun refresh() {
-        if (_isRefreshing.value) return
-        scope.launch {
-            _isRefreshing.value = true
+            resetPaging()
             try {
-                reset()
                 fetchNext()
             } finally {
                 _isRefreshing.value = false
@@ -56,11 +58,29 @@ class DeliveriesLogSharedViewModel(
         }
     }
 
-    fun loadMore() {
-        if (_isLoadingMore.value || _endReached.value) return
-        scope.launch { fetchNext() }
+    /** 🔹 Refresh manually */
+    fun refresh() {
+        if (_isRefreshing.value) return
+        scope.launch {
+            _isRefreshing.value = true
+            resetPaging()
+            try {
+                fetchNext()
+            } finally {
+                _isRefreshing.value = false
+            }
+        }
     }
 
+    /** 🔹 Load next page if available */
+    fun loadMore() {
+        if (_isLoadingMore.value || _endReached.value || _isRefreshing.value) return
+        scope.launch {
+            fetchNext()
+        }
+    }
+
+    /** 🔹 Search by Order ID or keyword */
     fun searchById(query: String) {
         val normalized = query.trim().removePrefix("#").ifEmpty { null }
         if (normalized != currentQuery) {
@@ -69,10 +89,17 @@ class DeliveriesLogSharedViewModel(
         }
     }
 
-    // ---- internals ----
+    /** 🔹 Called from LazyColumn to trigger pagination */
+    fun loadMoreIfNeeded(lastVisibleIndex: Int) {
+        if (_isLoadingMore.value || _endReached.value || _isRefreshing.value) return
+        val size = _logs.value.size
+        if (lastVisibleIndex >= size - 3) {
+            loadMore()
+        }
+    }
 
-    private fun reset() {
-        page = 1
+    private fun resetPaging() {
+        currentPage = 1
         hasNext = true
         lastRequested = null
         generationCounter += 1
@@ -82,20 +109,22 @@ class DeliveriesLogSharedViewModel(
 
     private suspend fun fetchNext() {
         if (!prepareNext()) return
-        val g = generationCounter
+        val gen = generationCounter
         _isLoadingMore.value = true
         try {
             val result = getLogsUseCase(
-                page = page,
+                page = currentPage,
                 limit = OrdersPaging.PAGE_SIZE,
                 statusIds = DeliveryStatusIds.DEFAULT_LOG_STATUSES,
                 search = currentQuery,
             )
-            if (g != generationCounter) return
 
-            result.onSuccess { pageData: Page<DeliveryLog> ->
+            result.onSuccess { pageData ->
+                if (gen != generationCounter) return@onSuccess
                 applyPageResult(pageData.items, pageData.hasNext)
-            }.onFailure {
+                println("page=${currentPage} size=${pageData.items.size} hasNext=${pageData.hasNext}")
+            }.onFailure { error ->
+                println(" DeliveriesLogSharedViewModel page=$currentPage limit=${OrdersPaging.PAGE_SIZE} error: ${error.message}")
                 _endReached.value = true
             }
         } finally {
@@ -108,16 +137,16 @@ class DeliveriesLogSharedViewModel(
             _endReached.value = true
             return false
         }
-        val key = page to currentQuery
+        val key = currentPage to currentQuery
         if (lastRequested == key) return false
         lastRequested = key
         return true
     }
 
     private fun applyPageResult(items: List<DeliveryLog>, next: Boolean) {
-        _logs.value = (_logs.value + items).distinctBy { it.number } // NOTE: using 'number'
+        _logs.value = (_logs.value + items).distinctBy { it.number }
         hasNext = next
         _endReached.value = !hasNext
-        if (hasNext) page += 1
+        if (hasNext) currentPage += 1
     }
 }

@@ -59,7 +59,13 @@ fun LoginScreen(
         when (uiState) {
             is LoginUiState.Success -> {
                 Toast.makeText(context, "Login Success", Toast.LENGTH_SHORT).show()
-                navController.navigate("empty") {   // 👈 هنا التنقل
+//                navController.navigate("empty") {   // 👈 هنا التنقل
+//                    popUpTo("login") { inclusive = true }
+//                }
+//                navController.navigate("deliveriesLog") {
+//                    popUpTo("login") { inclusive = true }
+//                }
+                navController.navigate("orderHistory") {
                     popUpTo("login") { inclusive = true }
                 }
             }

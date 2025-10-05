@@ -20,11 +20,16 @@ class MainActivity : ComponentActivity() {
             MaterialTheme {
                 //NetworkStatusScreen(monitor)
                 //MapScreen()
-                //LoginScreen()
+               // LoginScreen()
 
-                NavHost(navController = navController, startDestination = "login") {
+                NavHost(
+                    navController = navController,
+                    startDestination = "login"
+                ) {
                     composable("login") { LoginScreen(navController) }
-                    composable("empty") { EmptyScreen() }
+                    composable("deliveriesLog") { DeliveriesLogScreen() }
+                    composable("orderHistory") { OrdersHistoryScreen() }
+
                 }
             }
         }

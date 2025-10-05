@@ -11,6 +11,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import org.example.project.socket.SocketIntegration
 import org.example.project.BuildKonfig
+import org.example.project.delivery.data.api.DeliveriesLogApi
+import org.example.project.delivery.data.api.DeliveriesLogApiKtor
+import org.example.project.delivery.data.repositoryimpl.DeliveriesLogRepositoryImpl
+import org.example.project.delivery.domain.repository.DeliveriesLogRepository
+import org.example.project.delivery.domain.usecase.GetDeliveriesLogPageUseCase
+import org.example.project.orderhistory.data.api.OrdersHistoryApi
+import org.example.project.orderhistory.data.api.OrdersHistoryApiKtor
+import org.example.project.orderhistory.data.repositoryimpl.OrdersRepositoryImpl
+import org.example.project.orderhistory.domain.repository.OrdersRepository
+import org.example.project.orderhistory.domain.usecase.GetOrdersUseCase
 
 
 val locationCommonModule = module {
@@ -41,3 +51,13 @@ val socketModule = module {
     }
 }
 
+val deliveryModule = module {
+    single<DeliveriesLogApi> { DeliveriesLogApiKtor(tokenStore = get()) }
+    single<DeliveriesLogRepository> { DeliveriesLogRepositoryImpl(get()) }
+    factory { GetDeliveriesLogPageUseCase(get()) }
+}
+val orderHistoryModule = module {
+    single<OrdersHistoryApi> { OrdersHistoryApiKtor(tokenStore = get()) }
+    single<OrdersRepository> { OrdersRepositoryImpl(get()) }
+    factory { GetOrdersUseCase(get()) }
+}

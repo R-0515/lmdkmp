@@ -15,7 +15,6 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-
     iosX64()
     iosArm64()
     iosSimulatorArm64()
@@ -46,6 +45,8 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.koin.core)
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
+
             }
         }
 

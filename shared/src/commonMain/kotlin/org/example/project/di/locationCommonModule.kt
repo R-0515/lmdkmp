@@ -30,11 +30,3 @@ val authCommonModule = module {
     // UseCase
     factory { LoginUseCase(get()) }
 }
-
-
-
-val deliveryModule = module {
-    single<DeliveriesLogApi> { DeliveriesLogApiKtor() }
-    single<DeliveriesLogRepository> { DeliveriesLogRepositoryImpl(get()) }
-    factory { GetDeliveriesLogPageUseCase(get()) }
-}
