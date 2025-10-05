@@ -145,8 +145,20 @@ private fun extractOrdersAndPageInfo(data: JsonElement?): Pair<List<Order>, Page
     }
 }
 
+//private fun decodeOrdersArray(arr: JsonArray): List<Order> =
+//    runCatching { Json.decodeFromJsonElement<List<Order>>(arr) }
+//        .getOrElse { emptyList() }
+
+private val relaxedJson = Json {
+    ignoreUnknownKeys = true
+    isLenient = true
+    explicitNulls = false
+    coerceInputValues = true
+}
+
 private fun decodeOrdersArray(arr: JsonArray): List<Order> =
-    runCatching { Json.decodeFromJsonElement<List<Order>>(arr) }
+    runCatching { relaxedJson.decodeFromJsonElement<List<Order>>(arr) }
+        .onFailure { t -> println("decodeOrdersArray failed: ${t.message}") }
         .getOrElse { emptyList() }
 
 
