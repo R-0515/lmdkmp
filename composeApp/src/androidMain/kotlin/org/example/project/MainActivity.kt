@@ -4,11 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import org.example.project.auth.ui.EmptyScreen
-import org.example.project.auth.ui.LoginScreen
+import org.example.project.navigation.NavigationHandlerImpl
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,18 +14,13 @@ class MainActivity : ComponentActivity() {
         val monitor = NetworkMonitor(this)
         setContent {
             val navController = rememberNavController()
+            val navigationHandler = NavigationHandlerImpl(this, navController)
             MaterialTheme {
-                //NetworkStatusScreen(monitor)
-                //MapScreen()
-                //LoginScreen()
 
-                NavHost(navController = navController, startDestination = "login") {
-                    composable("login") { LoginScreen(navController) }
-                    composable("empty") { EmptyScreen(navController) }
+                AppNavGraph(navController, navigationHandler)
                 }
             }
         }
     }
-}
 
 

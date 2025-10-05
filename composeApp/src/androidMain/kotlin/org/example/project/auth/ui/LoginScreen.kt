@@ -1,22 +1,30 @@
 package org.example.project.auth.ui
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import org.example.navigation.NavigationHandler
 import org.example.project.auth.viewmodel.LoginUiState
 import org.example.project.auth.viewmodel.LoginViewModel
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 @Composable
 fun LoginScreen(
-    navController: NavController,
-    viewModel: LoginViewModel = koinViewModel()
+    navigationHandler: NavigationHandler,
+    viewModel: LoginViewModel = koinInject()
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
@@ -52,22 +60,21 @@ fun LoginScreen(
         Button(onClick = { viewModel.login(email, password) }) {
             Text("Login")
         }
+
+        if (uiState is LoginUiState.Loading) {
+            Spacer(modifier = Modifier.height(16.dp))
+            CircularProgressIndicator()
+        }
     }
 
     LaunchedEffect(uiState) {
         when (uiState) {
             is LoginUiState.Success -> {
-                Toast.makeText(context, "Login Success", Toast.LENGTH_SHORT).show()
-                navController.navigate("empty") {   // 👈 هنا التنقل
-                    popUpTo("login") { inclusive = true }
-                }
+                navigationHandler.showMessage("Login Success 🎉")
+                navigationHandler.navigateToHome()
             }
             is LoginUiState.Error -> {
-                Toast.makeText(
-                    context,
-                    (uiState as LoginUiState.Error).message,
-                    Toast.LENGTH_SHORT
-                ).show()
+                navigationHandler.showMessage((uiState as LoginUiState.Error).message)
             }
             else -> Unit
         }
