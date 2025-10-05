@@ -1,4 +1,3 @@
-import org.gradle.kotlin.dsl.implementation
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 
@@ -66,7 +65,7 @@ kotlin {
 }
 
 buildkonfig {
-    packageName = "org.example.project"
+    packageName = "org.lmd.project"
 
     defaultConfigs {
         buildConfigField(STRING, "BASE_URL", "https://kgomwyksxjqtcjwlzbsp.supabase.co/functions/v1/")
@@ -76,7 +75,7 @@ buildkonfig {
 }
 
 android {
-    namespace = "org.example.project.shared"
+    namespace = "org.lmd.project.shared"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     compileOptions {
