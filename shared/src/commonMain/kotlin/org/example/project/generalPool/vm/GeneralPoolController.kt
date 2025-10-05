@@ -174,4 +174,16 @@ class GeneralPoolController(
                 }
         }
     }
+
+    // After adding order to me, remove it from pool
+    fun removeOrderFromPool(orderId: String) {
+        _ui.update { cur ->
+            val newOrders = cur.orders.filterNot { it.id == orderId }
+            cur.copy(
+                orders = newOrders,
+                selected = cur.selected?.takeIf { it.id != orderId }
+            )
+        }
+    }
+
 }

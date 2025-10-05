@@ -59,6 +59,9 @@ class GeneralPoolViewModel(
         granted: Boolean,
         promptIfMissing: Boolean = false,
     ) = controller.handleLocationPermission(granted, promptIfMissing)
+
+    fun removeOrderFromPool(orderId: String) = controller.removeOrderFromPool(orderId)
+
 }
 
 private fun Coordinates.toLatLng(): LatLng = LatLng(latitude, longitude)
