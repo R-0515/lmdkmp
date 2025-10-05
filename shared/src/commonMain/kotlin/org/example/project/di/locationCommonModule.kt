@@ -28,5 +28,5 @@ import org.koin.dsl.module
 val authCommonModule = module {
 
     // UseCase
-    factory { LoginUseCase(get()) }
+    factory { LoginUseCase(get(), get()) }
 }
