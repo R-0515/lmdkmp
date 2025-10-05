@@ -3,7 +3,6 @@ package org.example.project
 import android.app.Application
 import org.example.project.di.androidAuthModule
 import org.example.project.di.authCommonModule
-import org.example.project.di.composeAppModule
 import org.example.project.di.SecureTokenAndroidModule
 import org.example.project.di.locationAndroidModule
 import org.example.project.di.locationCommonModule
@@ -24,7 +23,6 @@ class MyApp : Application() {
                     locationAndroidModule,
                     authCommonModule,
                     androidAuthModule,
-                    composeAppModule,
                     networkModule,
                     socketModule,
                     SecureTokenAndroidModule,

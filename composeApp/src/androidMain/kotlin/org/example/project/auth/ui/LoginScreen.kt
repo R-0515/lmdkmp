@@ -54,7 +54,6 @@ fun LoginScreen(
         }
     }
 
-    // ✅ التنقل عند النجاح
     LaunchedEffect(uiState) {
         when (uiState) {
             is LoginUiState.Success -> {

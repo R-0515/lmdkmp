@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(navController = navController, startDestination = "login") {
                     composable("login") { LoginScreen(navController) }
-                    composable("empty") { EmptyScreen() }
+                    composable("empty") { EmptyScreen(navController) }
                 }
             }
         }

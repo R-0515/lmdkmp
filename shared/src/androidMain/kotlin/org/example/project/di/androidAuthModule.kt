@@ -14,8 +14,11 @@ import org.example.project.auth.data.AuthApi
 import org.example.project.auth.data.AuthRepositoryImpl
 import org.example.project.auth.domain.repository.AuthRepository
 import org.example.project.auth.domain.usecase.LoginUseCase
+import org.example.project.auth.viewmodel.LoginViewModel
+import org.example.project.auth.viewmodel.LogoutViewModel
 import org.example.project.utils.AndroidUserStore
 import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 // in your DI module
@@ -47,7 +50,7 @@ val androidAuthModule = module {
 
     // Main client with token auth & logging
     single<HttpClient>(named("mainClient")) {
-        KtorClientProvider.create(
+        KtorClientProvider.getClient(
             store = get(),
             supabaseKey = BuildKonfig.SUPABASE_KEY,
             refreshApi = get(named("refreshApi"))
@@ -62,4 +65,8 @@ val androidAuthModule = module {
 
 
     factory { LoginUseCase(get(), get()) }
+
+    viewModel { LogoutViewModel(store = get()) }
+
+    viewModel { LoginViewModel(get()) }
 }
