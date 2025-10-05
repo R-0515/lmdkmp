@@ -9,6 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -59,5 +62,8 @@ fun App() {
                 }
             }
         }
+        // Replace demo UI with your network status screen
+        val monitor = NetworkMonitor(LocalContext.current)
+        NetworkStatusScreen(monitor)
     }
 }
