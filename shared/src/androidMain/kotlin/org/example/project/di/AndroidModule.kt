@@ -4,9 +4,11 @@ import com.google.android.gms.location.LocationServices
 import org.example.project.NetworkMonitor
 import org.example.project.SecureTokenStore
 import org.example.project.SecureTokenStoreImpl
+import org.example.project.UserStore
 import org.example.project.generalPool.vm.GeneralPoolViewModel
 import org.example.project.location.data.repository.AndroidLocationProvider
 import org.example.project.location.domain.repository.LocationProvider
+import org.example.project.utils.AndroidUserStore
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -27,6 +29,9 @@ val SecureTokenAndroidModule = module {
 
     // Bind NetworkMonitor
     single { NetworkMonitor(androidContext()) }
+
+    // Bind UserStore
+    single<UserStore> { AndroidUserStore(androidContext()) }
 }
 
 val generalPoolAndroidModule = module {

@@ -40,10 +40,12 @@ import org.example.project.generalPool.vm.GeneralPoolViewModel
 import org.example.project.map.components.mapCenter
 import org.example.project.map.domain.model.MapStates
 import org.example.project.R
+import org.example.project.UserStore
 import org.example.project.generalPool.components.searchResultsDropdown
 import org.example.project.generalPool.domain.model.OrderStatus
-import org.example.project.generalPool.vm.UpdateOrderStatusController
+import org.example.project.generalPool.vm.UpdateOrderStatusAndroidViewModel
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 // Map / Camera behavior
 private const val INITIAL_MAP_ZOOM = 12f
@@ -62,7 +64,8 @@ fun generalPoolScreen(
     val deviceLatLng by generalPoolViewModel.deviceLatLng.collectAsStateWithLifecycle()
     val hasCenteredOnDevice = remember { mutableStateOf(false) }
     setupInitialCamera(ui, deviceLatLng, cameraPositionState, hasCenteredOnDevice)
-    val currentUserId = remember { userStore.getUserId() }
+    val userStore: UserStore = koinInject()
+    val currentUserId = remember(userStore) { userStore.getUserId() }
 
     LaunchedEffect(Unit) {
         generalPoolViewModel.setCurrentUserId(currentUserId)
@@ -83,7 +86,7 @@ fun generalPoolScreen(
 
     val focusOnOrder =
         rememberFocusOnOrder(generalPoolViewModel, markerState, cameraPositionState, scope)
-    val onAddToMe = addToMeAction(context, generalPoolViewModel, currentUserId)
+//    val onAddToMe = addToMeAction(context, generalPoolViewModel, currentUserId)
 
     Box(Modifier.fillMaxSize()) {
         generalPoolContent(
@@ -93,44 +96,54 @@ fun generalPoolScreen(
             MapStates(cameraPositionState, markerState),
             deviceLatLng,
         )
-        poolBottomContent(ui, generalPoolViewModel, focusOnOrder, onAddToMe)
-
-    }
-}
-
-@Composable
-private fun addToMeAction(
-    context: Context,
-    viewModel: GeneralPoolViewModel,
-    currentUserId: String?,
-): (OrderInfo) -> Unit {
-    val updateVm: UpdateOrderStatusController = koinViewModel()
-    val scope = rememberCoroutineScope()
-
-    return remember(currentUserId) {
-        { order ->
-            val uid = currentUserId
-            if (uid.isNullOrBlank()) return@remember
-            val status = order.status ?: OrderStatus.ADDED
-            viewModel.onOrderSelected(order.copy(assignedAgentId = uid))
-            scope.launch {
-                runCatching {
-                    updateVm.update(
-                        orderId = order.id,
-                        targetStatus = status,
-                        assignedAgentId = uid,
-                    )
-                }.onSuccess {
-                    viewModel.onOrderSelected(null)
-                    viewModel.removeOrderFromPool(order.id)
-                    Toast.makeText(context, "Order Added Successfully", Toast.LENGTH_SHORT).show()
-                }.onFailure {
-                    Toast.makeText(context, "Failed to add order", Toast.LENGTH_SHORT).show()
-                }
-            }
+//        poolBottomContent(ui, generalPoolViewModel, focusOnOrder, onAddToMe)
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .zIndex(10f) // above GoogleMap
+                .padding(bottom = 8.dp, start = 8.dp, end = 8.dp)
+        ) {
+            poolBottomContent(ui, generalPoolViewModel, focusOnOrder)
         }
+
     }
 }
+
+//@Composable
+//private fun addToMeAction(
+//    context: Context,
+//    viewModel: GeneralPoolViewModel,
+//    currentUserId: String?,
+//): (OrderInfo) -> Unit {
+//    val updateVm: UpdateOrderStatusAndroidViewModel = koinViewModel()
+//    val scope = rememberCoroutineScope()
+//
+//    return remember(currentUserId) {
+//        { order ->
+//            val uid = currentUserId
+//            if (uid.isNullOrBlank()) return@remember
+//            val status = order.status ?: OrderStatus.ADDED
+//
+//            viewModel.onOrderSelected(order.copy(assignedAgentId = uid))
+//            scope.launch {
+//                runCatching {
+//                    updateVm.presenter.update(
+//                        orderId = order.id,
+//                        targetStatus = status,
+//                        assignedAgentId = uid,
+//                    )
+//                }.onSuccess {
+//                    viewModel.onOrderSelected(null)
+//                    viewModel.removeOrderFromPool(order.id)
+//                    Toast.makeText(context, "Order Added Successfully", Toast.LENGTH_SHORT).show()
+//                }.onFailure {
+//                    Toast.makeText(context, "Failed to add order", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        }
+//    }
+//}
 
 @Composable
 private fun setupInitialCamera(

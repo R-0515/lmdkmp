@@ -37,7 +37,8 @@ data class Order(
     @SerialName("last_updated") @JsonNames("last_updated", "updatedAt", "lastUpdated")
     val lastUpdated: String? = null,
 
-    @SerialName("coordinates") val coordinates: Coordinates,
+//    @SerialName("coordinates") val coordinates: Coordinates,
+    @SerialName("coordinates") val coordinates: Coordinates? = null,
 
     @SerialName("latitude") @JsonNames("latitude", "lat")
     val latitude: Double? = null,

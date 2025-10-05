@@ -1,33 +1,7 @@
 package org.example.project.generalPool.domain.model
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.json.JsonElement
-import org.example.project.location.domain.model.Coordinates
-
-//@Serializable
-//data class Order(
-//    val id: String? = null,
-//    @SerialName("order_id") val orderId: String? = null,
-//    @SerialName("order_number") val orderNumber: String? = null,
-//    @SerialName("customer_name") val customerName: String? = null,
-//    val address: String? = null,
-//    @SerialName("status_id") val statusId: Int? = null,
-//    @SerialName("assigned_agent_id") val assignedAgentId: String? = null,
-//    val price: String? = null,
-//    val phone: String? = null,
-//    @SerialName("partner_id") val partnerId: String? = null,
-//    @SerialName("dc_id") val dcId: String? = null,
-//    @SerialName("order_date") val orderDate: String? = null,
-//    @SerialName("delivery_time") val deliveryTime: String? = null,
-//    @SerialName("last_updated") val lastUpdated: String? = null,
-//
-//    // EITHER make Coordinates serializable (recommended)
-//    val coordinates: Coordinates? = null,
-//
-//    val latitude: Double? = null,
-//    @SerialName("longitude") val longitude: Double? = null
-//)
 
 @Serializable
 data class PagedOrdersResponse(

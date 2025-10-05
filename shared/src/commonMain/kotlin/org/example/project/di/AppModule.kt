@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import org.example.project.socket.SocketIntegration
 import org.example.project.BuildKonfig
+import org.example.project.generalPool.data.datasource.remote.LiveOrdersApiKtor
 import org.example.project.generalPool.data.datasource.remote.LiveOrdersApiService
 import org.example.project.generalPool.data.repository.LiveOrdersRepositoryImpl
 import org.example.project.generalPool.domain.repository.LiveOrdersRepository
@@ -61,10 +62,9 @@ val generalPoolCommonModule = module {
     factory { ComputeDistancesUseCase() }
 
     // Api
-    single {
-        LiveOrdersApiService(
-            client = get(),
-            baseUrl = BuildKonfig.WS_BASE_URL,
+    single<LiveOrdersApiService> {
+        LiveOrdersApiKtor(
+            tokenStore = get()
         )
     }
 }
