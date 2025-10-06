@@ -5,9 +5,9 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.MutableState
 import androidx.navigation.NavController
 import org.example.project.myPool.ui.viewmodel.ActiveAgentsViewModel
+import org.example.project.myPool.ui.viewmodel.MyOrdersViewModel
+import org.example.project.myPool.ui.viewmodel.MyPoolViewModel
 import org.example.project.myPool.ui.viewmodel.UpdateOrderStatusViewModel
-import org.example.project.myPool.ui.viewmodel.myOrder.MyOrdersViewModel
-import org.example.project.myPool.ui.viewmodel.myPool.MyPoolViewModel
 
 
 data class WireDeps(

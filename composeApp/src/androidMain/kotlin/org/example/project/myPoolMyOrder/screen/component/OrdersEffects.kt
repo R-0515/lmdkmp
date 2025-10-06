@@ -14,10 +14,9 @@ import kotlinx.coroutines.flow.collectLatest
 import org.example.project.R
 import org.example.project.myPool.domian.model.OrderInfo
 import org.example.project.myPool.ui.model.LocalUiOnlyStatusBus
+import org.example.project.myPool.ui.viewmodel.MyOrdersViewModel
 import org.example.project.myPool.ui.viewmodel.UpdateOrderStatusViewModel
-import org.example.project.myPool.ui.viewmodel.myOrder.MyOrdersViewModel
 import org.example.project.util.OrdersUiConstants.VISIBLE_THRESHOLD
-
 
 @Composable
 fun ordersEffects(
@@ -83,7 +82,7 @@ private fun updateSuccessEffect(
     vm: MyOrdersViewModel,
 ) {
     LaunchedEffect(Unit) {
-        updateVm.logic.success.collectLatest { serverOrder: OrderInfo ->
+        updateVm.success.collectLatest { serverOrder: OrderInfo ->
             vm.statusVM.applyServerPatch(serverOrder)
             vm.listVM.refreshOrders()
         }

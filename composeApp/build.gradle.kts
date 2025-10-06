@@ -44,10 +44,10 @@ kotlin {
             implementation("io.insert-koin:koin-android:3.5.6")
             implementation("io.insert-koin:koin-androidx-compose:3.5.6")
 
-            // horizontal list library
+           /* // horizontal list library
             implementation("com.github.shsaudhrb:HorizontalList:0882e3c3a0")
             // vertical list library
-            implementation("com.github.etharalrehaili4:verticallist:834045a12a")
+            implementation("com.github.etharalrehaili4:verticallist:834045a12a")*/
 
         }
         commonMain.dependencies {

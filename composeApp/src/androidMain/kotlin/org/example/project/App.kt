@@ -36,7 +36,7 @@ fun App() {
             Button(onClick = { showContent = !showContent }) {
                 Text("Click me!")
             }
-
+/*
             locationPermissionHandler(
                 onPermissionGranted =
                     @androidx.annotation.RequiresPermission(
@@ -49,7 +49,7 @@ fun App() {
                         fused.lastLocation.addOnSuccessListener { loc ->
                         }
                     },
-            )
+            )*/
 
             AnimatedVisibility(showContent) {
                 val greeting = remember { Greeting().greet() }

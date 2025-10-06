@@ -9,9 +9,9 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.example.project.location.domain.model.IMapStates
 import org.example.project.location.domain.model.cameraUpdateZoom
 import org.example.project.location.domain.model.isValid
-import org.example.project.map.domain.model.IMapStates
 import org.example.project.map.domain.model.MapMarker
 
 private const val INITIAL_CAMERA_ZOOM = 14f

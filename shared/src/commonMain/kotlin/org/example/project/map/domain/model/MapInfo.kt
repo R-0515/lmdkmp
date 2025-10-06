@@ -48,16 +48,3 @@ interface MapUiState {
     val hasLocationPerm: Boolean
 }
 
-
-data class MapConfig(
-    val ui: MapUiState,
-    val mapStates: IMapStates,
-    val deviceCoords: Coordinates?,
-    val canShowMyLocation: Boolean,
-)
-
-interface IMapStates {
-    fun move(update: MapCameraUpdate)
-    suspend fun animate(update: MapCameraUpdate)
-    fun updateMarker(coords: Coordinates)
-}

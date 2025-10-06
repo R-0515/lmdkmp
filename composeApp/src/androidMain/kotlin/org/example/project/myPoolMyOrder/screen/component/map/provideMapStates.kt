@@ -6,7 +6,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import org.example.project.location.domain.model.GoogleMapStates
-import org.example.project.map.domain.model.IMapStates
+import org.example.project.location.domain.model.IMapStates
 
 
 @Composable

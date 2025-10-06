@@ -1,5 +1,6 @@
 package org.example.project.myPool.domian.usecase
 
+import org.example.project.myPool.domian.model.OrdersPage
 import org.example.project.myPool.domian.repository.MyOrdersRepository
 
 class GetMyOrdersUseCase(

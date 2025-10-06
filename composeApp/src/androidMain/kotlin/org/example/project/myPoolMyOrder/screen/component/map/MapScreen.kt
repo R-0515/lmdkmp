@@ -26,13 +26,12 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import org.example.project.location.domain.model.Coordinates
+import org.example.project.location.domain.model.IMapStates
+import org.example.project.location.domain.model.MapConfig
 import org.example.project.location.domain.model.asGoogleMapsStates
 import org.example.project.location.domain.model.toLatLng
-import org.example.project.map.domain.model.IMapStates
-import org.example.project.map.domain.model.MapConfig
 import org.example.project.map.domain.model.MapMarker
 import org.example.project.map.domain.model.MapUiState
-import org.example.project.myPoolMyOrder.screen.component.map.MapChrome
 
 private const val TOP_OVERLAY_RATIO = 0.09f // 9% of screen height
 private const val BOTTOM_BAR_RATIO = 0.22f // 22% of screen height

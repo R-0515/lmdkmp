@@ -1,7 +1,5 @@
 package org.example.project.myPoolMyOrder.screen
 
-
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -25,62 +23,71 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.ntg.horizontallist.GeneralHorizontalList
-import com.ntg.horizontallist.GeneralHorizontalListCallbacks
+import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.launch
 import org.example.project.R
 import org.example.project.location.domain.model.Coordinates
+import org.example.project.location.domain.model.IMapStates
 import org.example.project.location.domain.repository.LocationProvider
 import org.example.project.location.screen.permissions.locationPermissionHandler
-import org.example.project.map.domain.model.IMapStates
 import org.example.project.map.domain.model.MapMarker
 import org.example.project.myPool.ui.model.MapOverlayCallbacks
 import org.example.project.myPoolMyOrder.screen.model.MapOverlayState
 import org.example.project.myPool.ui.model.MyOrdersPoolUiState
-import org.example.project.myPool.ui.viewmodel.myPool.MyPoolViewModel
+import org.example.project.myPool.ui.viewmodel.MyPoolViewModel
+import org.example.project.myPoolMyOrder.screen.component.list.HorizontalListCallbacks
+import org.example.project.myPoolMyOrder.screen.component.list.generalHorizontalList
 import org.example.project.myPoolMyOrder.screen.component.map.initialCameraPositionEffect
 import org.example.project.myPoolMyOrder.screen.component.map.mapScreen
 import org.example.project.myPoolMyOrder.screen.component.map.provideMapStates
 import org.example.project.myPoolMyOrder.screen.component.map.rememberFocusOnMarker
 import org.example.project.myPoolMyOrder.screen.component.myPoolOrderCardItem
 import org.koin.androidx.compose.get
+import org.koin.androidx.compose.koinViewModel
 
 
 // Zero fallback coordinates
 private val ZERO_COORDS = Coordinates(0.0, 0.0)
 @Composable
 fun myPoolScreen(
-    viewModel: MyPoolViewModel = koinViewModel(),
+/*
     onOpenOrderDetails: (String) -> Unit,
+*/
 ) {
-    val ui by viewModel.logic.ui.collectAsState()
+    val poolVm: MyPoolViewModel = koinViewModel()
+
+    val ui by poolVm.ui.collectAsState()
     var bottomBarHeight by remember { mutableStateOf(0.dp) }
 
     // decoupled location permission handling
     val context = LocalContext.current
     val locationProvider: LocationProvider = get()
+    val coroutineScope = rememberCoroutineScope()
 
     locationPermissionHandler(
-        onPermissionGranted = {
-            locationProvider.getLastKnownLocation(context) { coords ->
-                viewModel.logic.updateDeviceLocation(coords)
-                Log.d("MyPoolScreen", "Got device coords = $coords")
-            }
-        },
-        onPermissionDenied = {
-            Log.w("MyPoolScreen", "Location permission denied")
-        },
+        onPermissionGranted =
+            @androidx.annotation.RequiresPermission(
+                allOf = [
+                    android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                ],
+            ) { ctx ->
+                val fused = LocationServices.getFusedLocationProviderClient(ctx)
+                fused.lastLocation.addOnSuccessListener { loc ->
+                    poolVm.updateDeviceLocation(loc)
+                }
+            },
     )
-
     val mapStates = provideMapStates()
     initialCameraPositionEffect(ui.markers, ui.selectedMarkerId, mapStates)
 
     val state = overlayState(ui, bottomBarHeight, mapStates)
     val callbacks =
         rememberOverlayCallbacks(
-            viewModel = viewModel,
+            viewModel = poolVm,
             mapStates = mapStates,
-            onOpenOrderDetails = onOpenOrderDetails,
-            onNearEnd = { idx -> viewModel.logic.loadNextIfNeeded(idx) },
+            onOpenOrderDetails = {/*onOpenOrderDetails*/ },
+            onNearEnd = { idx -> poolVm.loadNextIfNeeded(idx) },
             setBottomBarHeight = { bottomBarHeight = it },
         )
 
@@ -120,9 +127,9 @@ private fun rememberOverlayCallbacks(
             onCenterChange = { marker ->
                 // find matching order for marker
                 val order =
-                    viewModel.logic.ui.value.orders
+                    viewModel.ui.value.orders
                         .firstOrNull { it.id == marker.id }
-                order?.let { viewModel.logic.onCenteredOrderChange(it) }
+                order?.let { viewModel.onCenteredOrderChange(it) }
             },
             mapStates = mapStates,
             scope = scope,
@@ -140,7 +147,7 @@ private fun rememberOverlayCallbacks(
                     snippet = order.orderNumber,
                 )
             focus(marker)
-            viewModel.logic.onCenteredOrderChange(order, index)
+            viewModel.onCenteredOrderChange(order, index)
         },
         onOpenOrderDetails = onOpenOrderDetails,
         onNearEnd = onNearEnd,
@@ -200,27 +207,27 @@ private fun loadingMoreIndicator(state: MapOverlayState) {
     }
 }
 
+
 @Composable
 private fun ordersHorizontalList(
     state: MapOverlayState,
     callbacks: MapOverlayCallbacks,
 ) {
-    GeneralHorizontalList(
-        items = state.orders,
-        key = { it.orderNumber }, // use a unique field from OrderInfo
-        callbacks = GeneralHorizontalListCallbacks(
-            onCenteredItemChange = { order, index ->
-                callbacks.onCenteredOrderChange(order, index)
-            },
-            onNearEnd = { idx ->
-                callbacks.onNearEnd(idx)
-            }
-        )
-    ) { order, _ ->
-        myPoolOrderCardItem(
-            order = order,
-            onOpenOrderDetails = callbacks.onOpenOrderDetails,
-            onCall = { },
-        )
-    }
+    generalHorizontalList(
+        orders = state.orders,
+        callbacks =
+            HorizontalListCallbacks(
+                onCenteredOrderChange = { order, index ->
+                    callbacks.onCenteredOrderChange(order, index)
+                },
+                onNearEnd = { idx -> callbacks.onNearEnd(idx) },
+            ),
+        cardContent = { order, _ ->
+            myPoolOrderCardItem(
+                order = order,
+                onOpenOrderDetails = callbacks.onOpenOrderDetails,
+                onCall = { },
+            )
+        },
+    )
 }

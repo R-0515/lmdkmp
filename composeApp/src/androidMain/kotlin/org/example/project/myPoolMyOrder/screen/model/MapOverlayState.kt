@@ -1,7 +1,7 @@
 package org.example.project.myPoolMyOrder.screen.model
 
 import androidx.compose.ui.unit.Dp
-import org.example.project.map.domain.model.IMapStates
+import org.example.project.location.domain.model.IMapStates
 import org.example.project.myPool.domian.model.OrderInfo
 import org.example.project.myPool.ui.model.MyOrdersPoolUiState
 

@@ -85,8 +85,8 @@ private fun myOrderCardHeader(
     orderHeaderWithMenu(
         order = order,
         enabled = !isUpdating,
-        onPickUp = { updateVm.logic.update(order.id, OrderStatus.PICKUP) },
-        onCancel = { updateVm.logic.update(order.id, OrderStatus.CANCELED) },
+        onPickUp = { updateVm.update(order.id, OrderStatus.PICKUP) },
+        onCancel = { updateVm.update(order.id, OrderStatus.CANCELED) },
         onReassign = onReassignRequested,
     )
 }

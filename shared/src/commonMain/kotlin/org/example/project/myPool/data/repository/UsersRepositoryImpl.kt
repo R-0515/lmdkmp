@@ -1,8 +1,9 @@
 package org.example.project.myPool.data.repository
 
+import org.example.project.myPool.data.mapper.toDomain
+import org.example.project.myPool.data.remote.api.GetUsersApi
 import org.example.project.myPool.domian.model.ActiveUser
 import org.example.project.myPool.domian.repository.UsersRepository
-
 
 class UsersRepositoryImpl(
     private val api: GetUsersApi,

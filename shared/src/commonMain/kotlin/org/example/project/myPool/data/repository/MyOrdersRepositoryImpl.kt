@@ -1,7 +1,10 @@
 package org.example.project.myPool.data.repository
 
+import org.example.project.myPool.data.mapper.toDomain
+import org.example.project.myPool.data.remote.api.OrdersApi
 import org.example.project.myPool.domian.model.OrderInfo
 import org.example.project.myPool.domian.model.OrderStatus
+import org.example.project.myPool.domian.model.OrdersPage
 import org.example.project.myPool.domian.repository.MyOrdersRepository
 
 class MyOrdersRepositoryImpl(
@@ -38,6 +41,7 @@ class MyOrdersRepositoryImpl(
         assignedAgentId: String?,
         userOrdersOnly: Boolean?,
     ): OrdersPage {
+
         if (isCacheValid(page, limit, bypassCache)) {
             return cachedPageData!!
         }
@@ -52,7 +56,10 @@ class MyOrdersRepositoryImpl(
         if (!env.success) error(env.error ?: "Unknown error from orders-list")
 
         val raw = env.data?.orders.orEmpty()
-
+        println("🧩 Raw orders count: ${raw.size}")
+        raw.forEach {
+            println("➡️ order=${it.orderNumber}, statusId=${it.statusId}, statusName=${it.orderstatuses?.statusName}")
+        }
         val filtered: List<OrderInfo> =
             raw.filter { dto ->
                 dto.statusId?.let { it in allowedIds } ?: (

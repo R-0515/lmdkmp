@@ -1,6 +1,7 @@
 package org.example.project.myPool.data.remote.dto
 
-import org.example.project.location.domain.model.Coordinates
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class OrdersEnvelope(
@@ -24,7 +25,6 @@ data class PaginationDto(
     @SerialName("has_next_page") val hasNextPage: Boolean? = null,
     @SerialName("has_prev_page") val hasPrevPage: Boolean? = null,
 )
-
 
 @Serializable
 data class OrderStatusDto(

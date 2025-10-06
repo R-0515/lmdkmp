@@ -2,6 +2,7 @@ package org.example.project.myPool.data.mapper
 
 import org.example.project.myPool.data.remote.dto.OrderDto
 import org.example.project.myPool.domian.model.OrderInfo
+import org.example.project.myPool.domian.model.OrderStatus
 import org.example.project.myPool.domian.model.OrderStatus.Companion.fromId
 import org.example.project.myPool.domian.model.RelativeTime
 import org.example.project.util.AppDefaults
@@ -24,7 +25,7 @@ fun OrderDto.toDomain(): OrderInfo =
         distanceKm = distanceKm.toKmOrDefault(AppDefaults.DEFAULT_DISTANCE_KM),
         lat = coordinates?.latitude ?: AppDefaults.DEFAULT_LAT,
         lng = coordinates?.longitude ?: AppDefaults.DEFAULT_LNG,
-        status = fromId(statusId),
+        status = OrderStatus.fromId(statusId) ?: OrderStatus.ADDED,
         price = price,
         customerPhone = phone,
         customerId = customerId,

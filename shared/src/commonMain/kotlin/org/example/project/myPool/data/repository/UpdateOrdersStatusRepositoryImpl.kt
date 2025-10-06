@@ -1,5 +1,6 @@
 package org.example.project.myPool.data.repository
 
+import org.example.project.myPool.data.remote.api.UpdateOrderStatusApi
 import org.example.project.myPool.data.remote.dto.UpdateOrderStatusRequest
 import org.example.project.myPool.data.remote.dto.UpdatedOrderData
 import org.example.project.myPool.domian.model.OrderInfo
@@ -9,7 +10,7 @@ import org.example.project.myPool.domian.repository.UpdateOrdersStatusRepository
 
 
 class UpdateOrdersStatusRepositoryImpl(
-    private val api: UpdatetOrdersStatusApi,
+    private val api: UpdateOrderStatusApi,
 ) : UpdateOrdersStatusRepository {
 
     override suspend fun updateOrderStatus(

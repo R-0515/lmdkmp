@@ -1,9 +1,14 @@
-package org.example.project.myPool.ui.logic.myOrderLogic
+package org.example.project.myPool.ui.viewmodel
 
-class OrdersSearchLogic(
+import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.update
+import org.example.project.myPool.domian.model.OrderInfo
+import org.example.project.myPool.domian.util.OrdersPaging
+
+class OrdersSearchViewModel(
     private val store: OrdersStore,
     private val pageSize: Int = OrdersPaging.PAGE_SIZE,
-) {
+) : ViewModel() {
     fun applySearchQuery(raw: String) {
         val q = raw.trim()
         val base = currentFilteredFor(q, store.allOrders)
@@ -33,8 +38,8 @@ class OrdersSearchLogic(
         if (q.isBlank()) return all
         return all.filter { o ->
             o.orderNumber.contains(q, ignoreCase = true) ||
-                    o.name.contains(q, ignoreCase = true) ||
-                    (o.details?.contains(q, ignoreCase = true) == true)
+                o.name.contains(q, ignoreCase = true) ||
+                (o.details?.contains(q, ignoreCase = true) == true)
         }
     }
 }

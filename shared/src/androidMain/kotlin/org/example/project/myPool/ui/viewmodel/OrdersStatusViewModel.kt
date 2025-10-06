@@ -1,9 +1,16 @@
-package org.example.project.myPool.ui.logic.myOrderLogic
+package org.example.project.myPool.ui.viewmodel
 
-class OrdersStatusLogic(
+import android.util.Log
+import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.update
+import org.example.project.myPool.domian.model.OrderInfo
+import org.example.project.myPool.domian.model.OrderStatus
+import org.example.project.myPool.domian.util.OrdersPaging
+import kotlin.text.get
+
+class OrdersStatusViewModel(
     private val store: OrdersStore,
-    private val logger: (String) -> Unit = {} // platform logger injected
-) {
+) : ViewModel() {
     fun updateStatusLocally(
         id: String,
         newStatus: OrderStatus,
@@ -16,11 +23,11 @@ class OrdersStatusLogic(
                         status = newStatus,
                         assignedAgentId = newAssigneeId ?: o.assignedAgentId,
                     )
-                } else o
+                } else {
+                    o
+                }
             }
-
         store.state.update { it.copy(orders = updatedVisible) }
-
         val j = store.allOrders.indexOfFirst { it.id == id }
         if (j != -1) {
             store.allOrders[j] =
@@ -33,46 +40,50 @@ class OrdersStatusLogic(
     }
 
     fun applyServerPatch(updated: OrderInfo) {
-        val visible = store.state.value.orders.toMutableList()
+        val visible =
+            store.state.value.orders
+                .toMutableList()
         val i = visible.indexOfFirst { it.id == updated.id }
         if (i != -1) {
-            visible[i] = visible[i].copy(
-                status = updated.status,
-                details = updated.details ?: visible[i].details,
-                assignedAgentId = updated.assignedAgentId,
-            )
+            visible[i] =
+                visible[i].copy(
+                    status = updated.status,
+                    details = updated.details ?: visible[i].details,
+                    assignedAgentId = updated.assignedAgentId,
+                )
             store.state.update { it.copy(orders = visible) }
         }
-
         val j = store.allOrders.indexOfFirst { it.id == updated.id }
         if (j != -1) {
-            store.allOrders[j] = store.allOrders[j].copy(
-                status = updated.status,
-                details = updated.details ?: store.allOrders[j].details,
-                assignedAgentId = updated.assignedAgentId,
-            )
+            store.allOrders[j] =
+                store.allOrders[j].copy(
+                    status = updated.status,
+                    details = updated.details ?: store.allOrders[j].details,
+                    assignedAgentId = updated.assignedAgentId,
+                )
         }
         reapplyFilter()
     }
 
     private fun reapplyFilter() {
         val uid = store.currentUserId.value
-        val q = store.state.value.query.trim()
+        val q =
+            store.state.value.query
+                .trim()
 
         val before = store.allOrders.size
         val filtered =
             store.allOrders.filter { o ->
                 val matchesQuery =
                     q.isBlank() ||
-                            o.orderNumber.contains(q, true) ||
-                            o.name.contains(q, true) ||
-                            (o.details?.contains(q, true) == true)
-
+                        o.orderNumber.contains(q, true) ||
+                        o.name.contains(q, true) ||
+                        (o.details?.contains(q, true) == true)
                 val matchesUser = uid.isNullOrBlank() || o.assignedAgentId == uid
                 matchesQuery && matchesUser
             }
 
-        logger("reapplyFilter: uid=$uid, all=$before, filtered=${filtered.size}")
+        Log.d("ReassignFlow", "reapplyFilter: uid=$uid, all=$before, filtered=${filtered.size}")
 
         val pageSize = OrdersPaging.PAGE_SIZE
         store.state.update { it.copy(orders = filtered.take(pageSize)) }

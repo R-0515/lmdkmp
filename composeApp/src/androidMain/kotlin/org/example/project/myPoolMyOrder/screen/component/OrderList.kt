@@ -11,15 +11,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.verticallist.PagingState
-import com.example.verticallist.defaultVerticalListConfig
-import com.example.verticallist.verticalListComponent
 import org.example.project.myPool.domian.model.OrderInfo
 import org.example.project.myPool.ui.model.MyOrderCardCallbacks
 import org.example.project.myPool.ui.model.OrderListCallbacks
 import org.example.project.myPoolMyOrder.screen.model.OrderListState
 import org.example.project.myPool.ui.state.AutoHideOnSuccessStatuses
 import org.example.project.myPool.ui.viewmodel.UpdateOrderStatusViewModel
+import org.example.project.myPoolMyOrder.screen.component.list.PagingState
+import org.example.project.myPoolMyOrder.screen.component.list.defaultVerticalListConfig
+import org.example.project.myPoolMyOrder.screen.component.list.verticalListComponent
 
 @Composable
 fun orderList(
@@ -71,7 +71,7 @@ private fun rememberFilteredOrders(
     var hiddenIds by remember { mutableStateOf(emptySet<String>()) }
 
     LaunchedEffect(updateVm) {
-        updateVm.logic.success.collect { s ->
+        updateVm.success.collect { s ->
             if (s.status in AutoHideOnSuccessStatuses) hiddenIds = hiddenIds + s.id
         }
     }

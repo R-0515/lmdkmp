@@ -10,6 +10,7 @@ import org.example.project.myPool.domian.model.OrderActions
 import org.example.project.myPool.domian.model.OrderInfo
 import org.example.project.myPool.ui.model.MyOrderCardCallbacks
 import org.example.project.myPool.ui.viewmodel.UpdateOrderStatusViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun myPoolOrderCardItem(

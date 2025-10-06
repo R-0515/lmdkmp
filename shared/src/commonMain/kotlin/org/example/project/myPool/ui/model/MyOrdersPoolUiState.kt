@@ -13,6 +13,8 @@ data class MyOrdersPoolUiState(
     val selectedOrderNumber: String? = null,
     override val distanceThresholdKm: Double = Double.MAX_VALUE,
     override val hasLocationPerm: Boolean = false,
+    val errorMessage: String? = null,
+    val emptyMessage: String? = null,
 ) : MapUiState {
     companion object {
         private const val MAX_LATITUDE = 90.0

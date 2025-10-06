@@ -17,15 +17,19 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.launch
 import org.example.project.R
+import org.example.project.UserStore
 import org.example.project.location.domain.repository.LocationProvider
 import org.example.project.location.screen.permissions.locationPermissionHandler
 import org.example.project.map.domain.model.toMapMarker
@@ -38,23 +42,25 @@ import org.example.project.myPoolMyOrder.screen.model.OrdersContentDeps
 import org.example.project.myPoolMyOrder.screen.model.WireDeps
 import org.example.project.myPool.ui.state.MyOrdersUiState
 import org.example.project.myPool.ui.viewmodel.ActiveAgentsViewModel
+import org.example.project.myPool.ui.viewmodel.MyOrdersViewModel
+import org.example.project.myPool.ui.viewmodel.MyPoolViewModel
 import org.example.project.myPool.ui.viewmodel.UpdateOrderStatusViewModel
-import org.example.project.myPool.ui.viewmodel.myOrder.MyOrdersViewModel
-import org.example.project.myPool.ui.viewmodel.myPool.MyPoolViewModel
 import org.example.project.myPoolMyOrder.screen.component.bottomStickyButton
 import org.example.project.myPoolMyOrder.screen.component.map.initialCameraPositionEffect
 import org.example.project.myPoolMyOrder.screen.component.map.provideMapStates
 import org.example.project.myPoolMyOrder.screen.component.ordersContent
 import org.example.project.myPoolMyOrder.screen.component.ordersEffects
 import org.example.project.myPoolMyOrder.screen.component.reassignBottomSheet
+import org.example.project.util.AndroidUserStore
 import org.koin.androidx.compose.get
+import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun myOrdersScreen(
     navController: NavController,
-    onOpenOrderDetails: (String) -> Unit,
 ) {
     val ordersVm: MyOrdersViewModel = koinViewModel()
     val updateVm: UpdateOrderStatusViewModel = koinViewModel()
@@ -86,20 +92,24 @@ fun myOrdersScreen(
             listState = listState,
             snack = snack,
             reassignOrderId = reassignOrderId,
-            onOpenOrderDetails = onOpenOrderDetails,
-        ),
-    )
+            onOpenOrderDetails = {},
+
+            ),
+        navController = navController,
+
+        )
 }
 
 @Composable
-private fun ordersBody(deps: OrdersBodyDeps) {
+private fun ordersBody(deps: OrdersBodyDeps, navController: NavController) {
     val uiState by deps.ordersVm.uiState.collectAsState()
-    val updatingIds by deps.updateVm.logic.updatingIds.collectAsState()
-    val agentsState by deps.agentsVm.logic.state.collectAsState()
+    val updatingIds by deps.updateVm.updatingIds.collectAsState()
+    val agentsState by deps.agentsVm.state.collectAsState()
 
     ordersScaffold(
         deps = deps,
         updatingIds = updatingIds,
+        navController = navController,
     )
 
     reassignSheet(
@@ -113,13 +123,14 @@ private fun ordersBody(deps: OrdersBodyDeps) {
 private fun ordersScaffold(
     deps: OrdersBodyDeps,
     updatingIds: Set<String>,
+    navController: NavController,
 ) {
     val listState = deps.listState
     val snack = deps.snack
 
     Scaffold(
         snackbarHost = { SnackbarHost(snack) },
-        bottomBar = { bottomStickyButton(text = stringResource(R.string.order_pool)) {} },
+        bottomBar = { bottomStickyButton(text = stringResource(R.string.order_pool)) {navController.navigate("my_pool_screen")} },
     ) { innerPadding ->
         ordersContent(
             ordersVm = deps.ordersVm,
@@ -134,7 +145,7 @@ private fun ordersScaffold(
                     onOpenOrderDetails = deps.onOpenOrderDetails,
                     onReassignRequested = { id ->
                         deps.reassignOrderId.value = id
-                        deps.agentsVm.logic.load()
+                        deps.agentsVm.load()
                     },
                 ),
             modifier =
@@ -155,7 +166,7 @@ private fun reassignSheet(
         open = deps.reassignOrderId.value != null,
         state = agentsState,
         onDismiss = { deps.reassignOrderId.value = null },
-        onRetry = { deps.agentsVm.logic.load() },
+        onRetry = { deps.agentsVm.load() },
         onSelect = { user ->
             val orderId = deps.reassignOrderId.value ?: return@reassignBottomSheet
             Log.d("ReassignFlow", "onSelect: orderId=$orderId → newAssignee=${user.id}")
@@ -170,7 +181,7 @@ private fun reassignSheet(
                 newStatus = OrderStatus.ADDED,
                 newAssigneeId = user.id,
             )
-            deps.updateVm.logic.update(
+            deps.updateVm.update(
                 orderId = orderId,
                 targetStatus = OrderStatus.ADDED,
                 assignedAgentId = user.id,
@@ -184,7 +195,7 @@ private fun reassignSheet(
 @Composable
 private fun wireMyOrders(deps: WireDeps) {
     val ctx = LocalContext.current
-    val poolUi by deps.poolVm.logic.ui.collectAsState()
+    val poolUi by deps.poolVm.ui.collectAsState()
 
     myOrdersLocationSection(deps, poolUi)
     myOrdersUserSection(deps)
@@ -202,9 +213,11 @@ fun myOrdersLocationSection(
     val context = LocalContext.current
 
     locationPermissionHandler(
-        onPermissionGranted = {
-            locationProvider.getLastKnownLocation(context) { coords ->
-                coords?.let { deps.poolVm.logic.updateDeviceLocation(it) }
+        onPermissionGranted = { ctx ->
+            val fused = LocationServices
+                    .getFusedLocationProviderClient(ctx)
+            fused.lastLocation.addOnSuccessListener { loc ->
+                deps.poolVm.updateDeviceLocation(loc)
             }
         },
     )
@@ -223,7 +236,7 @@ fun myOrdersLocationSection(
 
 @Composable
 private fun myOrdersUserSection(deps: WireDeps) {
-    val userStore: SecureUserStore = koinInject()
+    val userStore: UserStore = koinInject()
     val currentUserId: String? = remember { userStore.getUserId() }
     LaunchedEffect(currentUserId) {
         deps.ordersVm.listVM.setCurrentUserId(currentUserId)
@@ -247,7 +260,7 @@ private fun myOrdersEffectsSection(
     LaunchedEffect(uiState.query) { deps.listState.scrollToItem(0) }
 
     LaunchedEffect(Unit) {
-        deps.updateVm.logic.error.collect { (msg, retry) ->
+        deps.updateVm.error.collect { (msg, retry) ->
             val res =
                 deps.snack.showSnackbar(
                     message = msg,
@@ -265,7 +278,7 @@ private fun forwardMyPoolLocationToMyOrders(
     poolVm: MyPoolViewModel,
     ordersVm: MyOrdersViewModel,
 ) {
-    val lastLoc by poolVm.logic.lastLocation.collectAsState(initial = null)
+    val lastLoc by poolVm.lastLocation.collectAsState(initial = null)
     LaunchedEffect(lastLoc) { ordersVm.listVM.updateDeviceLocation(lastLoc) }
 }
 

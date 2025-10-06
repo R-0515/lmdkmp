@@ -1,35 +1,47 @@
-package org.example.project.myPool.ui.logic.myOrderLogic
+package org.example.project.myPool.ui.viewmodel
 
-import org.example.project.myPool.ui.state.OrdersStore
-//OrderListVMHelpers
-/**
- * Core error handling logic (works on iOS + Android).
- */
+import android.content.Context
+import kotlinx.coroutines.flow.update
+import org.example.project.myPool.domian.model.OrderInfo
+import org.example.project.myPool.domian.usecase.GetMyOrdersUseCase
+import org.example.project.myPool.domian.util.OrdersPaging
+import org.example.project.myPool.ui.model.LocalUiOnlyStatusBus
+import org.example.project.util.toUserMessage
+import java.io.IOException
 
-
-class OrdersErrorCore(
-    private val store: OrdersStore
+class OrdersListErrorHandler(
+    private val store: OrdersStore,
+    private val helpers: OrdersListHelpers,
 ) {
     private val state get() = store.state
 
-    fun handleInitialErrorMessage(
-        message: String,
+    fun handleInitialError(
+        e: IOException,
         alreadyHasData: Boolean,
-        retry: () -> Unit
+        context: Context,
+        retryInitial: (Context) -> Unit,
     ) {
+        val msg = e.toUserMessage()
         if (alreadyHasData) {
-            // keep old orders, just show error
-            state.update { it.copy(isLoading = false, errorMessage = message) }
+            state.update { it.copy(isLoading = false, errorMessage = msg) }
+            LocalUiOnlyStatusBus.errorEvents.tryEmit(msg to { retryInitial(context) })
         } else {
-            // fresh load failed
-            state.update { it.copy(isLoading = false, errorMessage = message) }
+            helpers.handleInitialLoadError(
+                e = e,
+                alreadyHasData = alreadyHasData,
+                context = context,
+                state = state,
+                retry = retryInitial,
+            )
         }
-        // retry callback is passed in, platform can choose what to do with it
     }
 
-    fun postError(message: String, retry: () -> Unit) {
+    fun postError(
+        message: String,
+        retry: () -> Unit,
+    ) {
         state.update { it.copy(errorMessage = message) }
-        // Platform decides how to show retry
+        LocalUiOnlyStatusBus.errorEvents.tryEmit(message to retry)
     }
 }
 
@@ -64,7 +76,7 @@ class OrdersThrottle(
     fun canRequest(page: Int): Boolean {
         val withinCooldown =
             lastFailedPage == page &&
-                    (System.currentTimeMillis() - lastNextPageErrorAtMs) < cooldownMs
+                (System.currentTimeMillis() - lastNextPageErrorAtMs) < cooldownMs
         return !withinCooldown
     }
 

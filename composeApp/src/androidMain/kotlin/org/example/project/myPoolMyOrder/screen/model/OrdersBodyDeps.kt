@@ -4,8 +4,8 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.MutableState
 import org.example.project.myPool.ui.viewmodel.ActiveAgentsViewModel
+import org.example.project.myPool.ui.viewmodel.MyOrdersViewModel
 import org.example.project.myPool.ui.viewmodel.UpdateOrderStatusViewModel
-import org.example.project.myPool.ui.viewmodel.myOrder.MyOrdersViewModel
 
 data class OrdersBodyDeps(
     val ordersVm: MyOrdersViewModel,

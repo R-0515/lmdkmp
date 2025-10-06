@@ -1,6 +1,8 @@
 package org.example.project
 
 import android.app.Application
+import org.example.project.di.MyOrderMyPoolModule
+import org.example.project.di.MyOrderMyPoolModuleRepos
 import org.example.project.di.androidAuthModule
 import org.example.project.di.authCommonModule
 import org.example.project.di.composeAppModule
@@ -28,6 +30,8 @@ class MyApp : Application() {
                     networkModule,
                     socketModule,
                     SecureTokenAndroidModule,
+                    MyOrderMyPoolModule,
+                    MyOrderMyPoolModuleRepos
                 ),
             )
         }

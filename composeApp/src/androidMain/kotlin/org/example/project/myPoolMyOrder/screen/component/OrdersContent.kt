@@ -19,8 +19,8 @@ import org.example.project.myPoolMyOrder.screen.model.OrderListState
 import org.example.project.myPool.ui.model.OrdersContentCallbacks
 import org.example.project.myPoolMyOrder.screen.model.OrdersContentDeps
 import org.example.project.myPool.ui.state.MyOrdersUiState
+import org.example.project.myPool.ui.viewmodel.MyOrdersViewModel
 import org.example.project.myPool.ui.viewmodel.UpdateOrderStatusViewModel
-import org.example.project.myPool.ui.viewmodel.myOrder.MyOrdersViewModel
 
 @Composable
 fun ordersContent(
@@ -55,6 +55,7 @@ fun ordersContent(
         }
     }
 }
+
 
 private fun buildOrderListState(
     ui: MyOrdersUiState,
@@ -98,11 +99,11 @@ private fun buildOrderListCallbacks(
             }
         UpdateOrderStatusViewModel.OrderLogger.uiTap(orderId, order?.orderNumber, label)
         when (dialog) {
-            OrderActions.Confirm -> deps.updateVm.logic.update(orderId, OrderStatus.CONFIRMED)
-            OrderActions.PickUp -> deps.updateVm.logic.update(orderId, OrderStatus.PICKUP)
-            OrderActions.Start -> deps.updateVm.logic.update(orderId, OrderStatus.START_DELIVERY)
-            OrderActions.Deliver -> deps.updateVm.logic.update(orderId, OrderStatus.DELIVERY_DONE)
-            OrderActions.Fail -> deps.updateVm.logic.update(orderId, OrderStatus.DELIVERY_FAILED)
+            OrderActions.Confirm -> deps.updateVm.update(orderId, OrderStatus.CONFIRMED)
+            OrderActions.PickUp -> deps.updateVm.update(orderId, OrderStatus.PICKUP)
+            OrderActions.Start -> deps.updateVm.update(orderId, OrderStatus.START_DELIVERY)
+            OrderActions.Deliver -> deps.updateVm.update(orderId, OrderStatus.DELIVERY_DONE)
+            OrderActions.Fail -> deps.updateVm.update(orderId, OrderStatus.DELIVERY_FAILED)
         }
     },
     onRefresh = { ordersVm.listVM.refresh(context) },
