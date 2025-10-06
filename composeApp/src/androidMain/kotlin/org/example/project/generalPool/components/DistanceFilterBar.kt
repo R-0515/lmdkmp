@@ -25,7 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
-import org.example.project.R
+import org.lmd.project.R
 
 // Slider constraints
 private const val DISTANCE_MIN_KM: Double = 1.0

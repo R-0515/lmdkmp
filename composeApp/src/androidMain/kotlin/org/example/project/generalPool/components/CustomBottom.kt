@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.example.project.generalPool.domain.model.OrderInfo
 import java.util.Locale
-import org.example.project.R
+import org.lmd.project.R
 
 @Composable
 fun orderHeader(order: OrderInfo) {

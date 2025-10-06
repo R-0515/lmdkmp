@@ -1,6 +1,7 @@
 package org.lmd.project
 
 import android.app.Application
+import org.example.project.di.generalPoolCommonModule
 import org.lmd.project.di.androidAuthModule
 import org.lmd.project.di.authCommonModule
 import org.lmd.project.di.SecureTokenAndroidModule
@@ -10,6 +11,7 @@ import org.lmd.project.di.networkModule
 import org.lmd.project.di.socketModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.startKoin
+import org.lmd.project.di.generalPoolAndroidModule
 
 class MyApp : Application() {
 

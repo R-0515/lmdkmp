@@ -8,12 +8,12 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import org.example.project.location.domain.model.Coordinates
-import org.example.project.location.domain.usecase.ComputeDistancesUseCase
-import org.example.project.location.domain.usecase.GetDeviceLocationsUseCase
 import org.example.project.generalPool.domain.model.GeneralPoolUiState
 import org.example.project.generalPool.domain.usecase.LoadOrdersUseCase
 import org.example.project.generalPool.domain.usecase.OrdersRealtimeUseCase
+import org.lmd.project.location.domain.model.Coordinates
+import org.lmd.project.location.domain.usecase.ComputeDistancesUseCase
+import org.lmd.project.location.domain.usecase.GetDeviceLocationsUseCase
 
 class GeneralPoolViewModel(
     ordersRealtime: OrdersRealtimeUseCase,
@@ -46,12 +46,12 @@ class GeneralPoolViewModel(
     val onOrderSelected get() = controller.onOrderSelected
 
     fun setCurrentUserId(id: String?) = controller.setCurrentUserId(id)
-    fun attach() = controller.attach()
+    suspend fun attach() = controller.attach()
 
-    override fun onCleared() {
-        controller.clear()
-        super.onCleared()
-    }
+//    override suspend fun onCleared() {
+//        controller.clear()
+//        super.onCleared()
+//    }
 
     fun onDistanceChange(km: Double) = controller.onDistanceChange(km)
 

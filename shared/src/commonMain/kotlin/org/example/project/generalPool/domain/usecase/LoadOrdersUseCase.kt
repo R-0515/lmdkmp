@@ -1,7 +1,7 @@
 package org.example.project.generalPool.domain.usecase
 
 import org.example.project.generalPool.domain.repository.LiveOrdersRepository
-import org.example.project.socket.Order
+import org.lmd.project.socket.Order
 
 class LoadOrdersUseCase(
     private val repo: LiveOrdersRepository,

@@ -2,22 +2,22 @@ package org.example.project.di
 
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.websocket.WebSockets
-import org.example.project.location.data.repository.LocationRepositoryImpl
-import org.example.project.location.domain.repository.LocationRepository
-import org.example.project.location.domain.usecase.GetDeviceLocationsUseCase
 import org.koin.dsl.module
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import org.example.project.socket.SocketIntegration
-import org.example.project.BuildKonfig
 import org.example.project.generalPool.data.datasource.remote.LiveOrdersApiKtor
 import org.example.project.generalPool.data.datasource.remote.LiveOrdersApiService
 import org.example.project.generalPool.data.repository.LiveOrdersRepositoryImpl
 import org.example.project.generalPool.domain.repository.LiveOrdersRepository
 import org.example.project.generalPool.domain.usecase.LoadOrdersUseCase
 import org.example.project.generalPool.domain.usecase.OrdersRealtimeUseCase
-import org.example.project.location.domain.usecase.ComputeDistancesUseCase
+import org.lmd.project.BuildKonfig
+import org.lmd.project.location.data.repository.LocationRepositoryImpl
+import org.lmd.project.location.domain.repository.LocationRepository
+import org.lmd.project.location.domain.usecase.ComputeDistancesUseCase
+import org.lmd.project.location.domain.usecase.GetDeviceLocationsUseCase
+import org.lmd.project.socket.SocketIntegration
 
 val locationCommonModule = module {
     // Repository API (depends on LocationProvider)

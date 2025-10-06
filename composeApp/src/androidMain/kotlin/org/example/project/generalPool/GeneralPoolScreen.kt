@@ -33,19 +33,17 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.launch
 import org.example.project.generalPool.components.distanceFilterBar
-import org.example.project.location.screen.permissions.locationPermissionHandler
 import org.example.project.generalPool.domain.model.GeneralPoolUiState
 import org.example.project.generalPool.domain.model.OrderInfo
 import org.example.project.generalPool.vm.GeneralPoolViewModel
-import org.example.project.map.components.mapCenter
 import org.example.project.map.domain.model.MapStates
-import org.example.project.R
-import org.example.project.UserStore
 import org.example.project.generalPool.components.searchResultsDropdown
-import org.example.project.generalPool.domain.model.OrderStatus
-import org.example.project.generalPool.vm.UpdateOrderStatusAndroidViewModel
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
+import org.lmd.project.R
+import org.lmd.project.UserStore
+import org.lmd.project.location.screen.permissions.locationPermissionHandler
+import org.lmd.project.map.components.mapCenter
 
 // Map / Camera behavior
 private const val INITIAL_MAP_ZOOM = 12f

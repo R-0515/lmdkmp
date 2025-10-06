@@ -5,9 +5,9 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
 import org.example.project.generalPool.domain.model.PagedOrdersResponse
-import org.example.project.BuildKonfig
-import org.example.project.BuildKonfig.BASE_URL
-import org.example.project.SecureTokenStore
+import org.lmd.project.BuildKonfig
+import org.lmd.project.BuildKonfig.BASE_URL
+import org.lmd.project.SecureTokenStore
 
 interface LiveOrdersApiService {
     suspend fun getLiveOrdersPage(

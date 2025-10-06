@@ -10,15 +10,15 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.example.project.location.domain.model.Coordinates
-import org.example.project.location.domain.usecase.ComputeDistancesUseCase
-import org.example.project.location.domain.usecase.GetDeviceLocationsUseCase
 import org.example.project.generalPool.domain.mapper.toUi
 import org.example.project.generalPool.domain.model.GeneralPoolUiState
 import org.example.project.generalPool.domain.model.OrderInfo
 import org.example.project.generalPool.domain.usecase.LoadOrdersUseCase
 import org.example.project.generalPool.domain.usecase.OrdersRealtimeUseCase
-import org.example.project.socket.Order
+import org.lmd.project.location.domain.model.Coordinates
+import org.lmd.project.location.domain.usecase.ComputeDistancesUseCase
+import org.lmd.project.location.domain.usecase.GetDeviceLocationsUseCase
+import org.lmd.project.socket.Order
 
 sealed class GeneralPoolUiEvent {
     data object RequestLocationPermission : GeneralPoolUiEvent()
@@ -63,18 +63,18 @@ class GeneralPoolController(
         currentUserId = id?.trim()?.ifEmpty { null }
     }
 
-    fun attach() {
+    suspend fun attach() {
         if (!realtimeStarted) startRealtime()
         loadOrdersFromApi()
     }
 
-    fun clear() {
+    suspend fun clear() {
         ordersRealtime.disconnect()
         realtimeJob?.cancel()
         realtimeStarted = false
     }
 
-    private fun startRealtime() {
+    private suspend fun startRealtime() {
         realtimeStarted = true
         ordersRealtime.connect("orders")
         realtimeJob?.cancel()

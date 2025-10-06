@@ -8,7 +8,7 @@ import kotlinx.datetime.atStartOfDayIn
 import org.example.project.generalPool.domain.model.OrderInfo
 import org.example.project.generalPool.domain.model.OrderStatus
 import org.example.project.generalPool.domain.model.RelativeTime
-import org.example.project.socket.Order
+import org.lmd.project.socket.Order
 import kotlin.math.abs
 import kotlin.time.ExperimentalTime
 

@@ -13,8 +13,8 @@ import org.example.project.generalPool.data.datasource.remote.LiveOrdersApiServi
 import org.example.project.generalPool.domain.model.PageInfo
 import org.example.project.generalPool.domain.model.PagedOrdersResponse
 import org.example.project.generalPool.domain.repository.LiveOrdersRepository
-import org.example.project.socket.Order
-import org.example.project.socket.SocketIntegration
+import org.lmd.project.socket.Order
+import org.lmd.project.socket.SocketIntegration
 import kotlin.coroutines.cancellation.CancellationException
 
 class LiveOrdersRepositoryImpl(
@@ -50,18 +50,18 @@ class LiveOrdersRepositoryImpl(
         }
 
     // Connect to socket channel and start listening for live order updates
-    override fun connectToOrders(channelName: String) {
+    override suspend fun connectToOrders(channelName: String) {
         socket.connect(channelName)
         socket.startChannelListener()
     }
 
     // disconnect socket connection
-    override fun disconnectFromOrders() {
+    override suspend fun disconnectFromOrders() {
         socket.disconnect()
     }
 
     // retry socket connection after failure
-    override fun retryConnection() {
+    override suspend fun retryConnection() {
         socket.retryConnection()
     }
 

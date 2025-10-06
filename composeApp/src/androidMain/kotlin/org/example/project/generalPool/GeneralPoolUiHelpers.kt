@@ -18,8 +18,8 @@ import com.ntg.horizontallist.GeneralHorizontalListCallbacks
 import org.example.project.generalPool.domain.model.GeneralPoolUiState
 import org.example.project.generalPool.domain.model.OrderInfo
 import org.example.project.generalPool.vm.GeneralPoolViewModel
-import org.example.project.R
 import org.example.project.generalPool.components.orderCard
+import org.lmd.project.R
 
 @Composable
 fun poolBottomContent(
