@@ -1,6 +1,6 @@
-import org.gradle.kotlin.dsl.implementation
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -40,12 +40,15 @@ kotlin {
                 implementation(libs.ktor.client.logging)
 
                 // Multiplatform dependencies
-                implementation(libs.ktor.client.core)
                 implementation(libs.ktor.client.websockets)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.koin.core)
+
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
+
+                implementation("org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2")
 
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
             }
@@ -61,6 +64,7 @@ kotlin {
                 implementation(libs.maps.compose)
                 implementation(libs.play.services.location)
                 implementation(libs.ktor.client.android)
+                implementation("androidx.navigation:navigation-compose:2.8.2")
             }
         }
         commonTest.dependencies {
@@ -70,7 +74,7 @@ kotlin {
 }
 
 buildkonfig {
-    packageName = "org.example.project"
+    packageName = "org.lmd.project"
 
     defaultConfigs {
         buildConfigField(STRING, "BASE_URL", "https://kgomwyksxjqtcjwlzbsp.supabase.co/functions/v1/")
@@ -80,7 +84,7 @@ buildkonfig {
 }
 
 android {
-    namespace = "org.example.project.shared"
+    namespace = "org.lmd.project.shared"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     compileOptions {
