@@ -2,7 +2,6 @@ package org.lmd.project.di
 
 import com.google.android.gms.location.LocationServices
 import org.lmd.project.delivery.ui.vm.DeliveriesLogViewModel
-import org.example.project.generalPool.vm.GeneralPoolViewModel
 import org.lmd.project.NetworkMonitor
 import org.lmd.project.SecureTokenStore
 import org.lmd.project.SecureTokenStoreImpl
@@ -14,6 +13,7 @@ import org.koin.dsl.module
 import org.lmd.project.orderhistory.OrderHistoryViewModel
 
 import org.lmd.project.UserStore
+import org.lmd.project.generalPool.vm.GeneralPoolViewModel
 import org.lmd.project.utils.AndroidUserStore
 
 val locationAndroidModule = module {

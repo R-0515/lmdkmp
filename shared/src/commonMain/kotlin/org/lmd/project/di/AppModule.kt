@@ -17,6 +17,13 @@ import org.lmd.project.delivery.data.api.DeliveriesLogApiKtor
 import org.lmd.project.delivery.data.repositoryimpl.DeliveriesLogRepositoryImpl
 import org.lmd.project.delivery.domain.repository.DeliveriesLogRepository
 import org.lmd.project.delivery.domain.usecase.GetDeliveriesLogPageUseCase
+import org.lmd.project.generalPool.data.datasource.remote.LiveOrdersApiKtor
+import org.lmd.project.generalPool.data.datasource.remote.LiveOrdersApiService
+import org.lmd.project.generalPool.data.repository.LiveOrdersRepositoryImpl
+import org.lmd.project.generalPool.domain.repository.LiveOrdersRepository
+import org.lmd.project.generalPool.domain.usecase.LoadOrdersUseCase
+import org.lmd.project.generalPool.domain.usecase.OrdersRealtimeUseCase
+import org.lmd.project.location.domain.usecase.ComputeDistancesUseCase
 import org.lmd.project.orderhistory.data.api.OrdersHistoryApi
 import org.lmd.project.orderhistory.data.api.OrdersHistoryApiKtor
 import org.lmd.project.orderhistory.data.repositoryimpl.OrdersRepositoryImpl
@@ -67,3 +74,24 @@ val orderHistoryModule = module {
     factory { GetOrdersUseCase(get()) }
 }
 
+val generalPoolCommonModule = module {
+
+    // repository
+    single<LiveOrdersRepository> {
+        LiveOrdersRepositoryImpl(
+            get(), get()
+        )
+    }
+
+    // Use cases
+    factory { LoadOrdersUseCase(get<LiveOrdersRepository>()) }
+    factory { OrdersRealtimeUseCase(get<LiveOrdersRepository>()) }
+    factory { ComputeDistancesUseCase() }
+
+    // Api
+    single<LiveOrdersApiService> {
+        LiveOrdersApiKtor(
+            tokenStore = get()
+        )
+    }
+}

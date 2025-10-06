@@ -1,7 +1,6 @@
 package org.lmd.project
 
 import android.app.Application
-import org.example.project.di.generalPoolCommonModule
 import org.lmd.project.di.androidAuthModule
 import org.lmd.project.di.authCommonModule
 import org.lmd.project.di.SecureTokenAndroidModule
@@ -13,6 +12,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.startKoin
 import org.lmd.project.di.deliveryAndroidModule
 import org.lmd.project.di.generalPoolAndroidModule
+import org.lmd.project.di.generalPoolCommonModule
 import org.lmd.project.di.orderHistoryAndroidModule
 
 class MyApp : Application() {

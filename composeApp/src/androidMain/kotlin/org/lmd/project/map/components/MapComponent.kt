@@ -25,11 +25,9 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
-import com.google.maps.android.compose.rememberCameraPositionState
-import org.lmd.project.location.domain.model.Coordinates
-import org.example.project.generalPool.domain.model.MapUiState
-import org.example.project.generalPool.domain.model.OrderInfo
-import org.example.project.map.domain.model.MapStates
+import org.lmd.project.generalPool.domain.model.MapUiState
+import org.lmd.project.generalPool.domain.model.OrderInfo
+import org.lmd.project.map.domain.model.MapStates
 
 // screen height
 private const val TOP_OVERLAY_RATIO = 0.09f // 9% of screen height
