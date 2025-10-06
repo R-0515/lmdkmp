@@ -3,7 +3,6 @@ package org.lmd.project.navigation
 import android.content.Context
 import android.widget.Toast
 import androidx.navigation.NavController
-import org.lmd.navigation.NavigationHandler
 
 class NavigationHandlerImpl(
     private val context: Context,
@@ -19,6 +18,17 @@ class NavigationHandlerImpl(
     override fun navigateToLogin() {
         navController.navigate("login") {
             popUpTo("empty") { inclusive = true }
+        }
+    }
+    override fun navigateToOrderHistory() {
+        navController.navigate("orderHistory") {
+            popUpTo("login") { inclusive = true }
+        }
+    }
+    override fun navigateToDelivery() {
+        navController.navigate("deliveriesLog") {
+            popUpTo("login") { inclusive = true }
+
         }
     }
 

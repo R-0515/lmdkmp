@@ -16,6 +16,9 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val navigationHandler = NavigationHandlerImpl(this, navController)
             MaterialTheme {
+                //NetworkStatusScreen(monitor)
+                //MapScreen()
+                //LoginScreen()
 
                 AppNavGraph(navController, navigationHandler)
                 }
