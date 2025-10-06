@@ -1,6 +1,7 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
@@ -44,6 +45,10 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.koin.core)
+
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
+
+                implementation("org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2")
             }
         }
 
@@ -56,6 +61,7 @@ kotlin {
                 implementation(libs.play.services.maps)
                 implementation(libs.maps.compose)
                 implementation(libs.play.services.location)
+                implementation("androidx.navigation:navigation-compose:2.8.2")
             }
         }
         commonTest.dependencies {

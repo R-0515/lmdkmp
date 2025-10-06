@@ -4,12 +4,12 @@ import androidx.lifecycle.ViewModel
 import com.ntg.lmd.network.core.KtorClientProvider
 import org.lmd.project.SecureTokenStore
 
-class LogoutViewModel(
+actual class LogoutViewModel(
     private val store: SecureTokenStore
 ) : ViewModel() {
 
-    fun logout() {
-        store.clear() // clear token
-        KtorClientProvider.closeClient() // optional: reset client cache
+    actual fun logout() {
+        store.clear() // clear saved tokens
+        KtorClientProvider.closeClient()
     }
 }
