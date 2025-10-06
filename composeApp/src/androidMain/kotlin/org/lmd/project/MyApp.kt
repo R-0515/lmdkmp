@@ -10,6 +10,8 @@ import org.lmd.project.di.networkModule
 import org.lmd.project.di.socketModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.startKoin
+import org.lmd.project.di.deliveryAndroidModule
+import org.lmd.project.di.orderHistoryAndroidModule
 
 class MyApp : Application() {
 

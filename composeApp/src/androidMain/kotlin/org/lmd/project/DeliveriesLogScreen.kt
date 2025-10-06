@@ -28,14 +28,15 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.ui.unit.Dp
 import org.koin.androidx.compose.koinViewModel
+import org.lmd.project.delivery.domain.model.DeliveryLog
+import org.lmd.project.delivery.domain.model.DeliveryState
 
 // ---- domain + vm ----
-import org.example.project.delivery.domain.model.DeliveryLog
-import org.example.project.delivery.domain.model.DeliveryState
-import org.example.project.delivery.ui.vm.DeliveriesLogViewModel
+import org.lmd.project.delivery.ui.vm.DeliveriesLogViewModel
+import org.lmd.project.navigation.NavigationHandler
 
 @Composable
-fun DeliveriesLogScreen() {
+fun DeliveriesLogScreen(navigationHandler: NavigationHandler,) {
     val vm: DeliveriesLogViewModel = koinViewModel()
 
     LaunchedEffect(Unit) { vm.load() }

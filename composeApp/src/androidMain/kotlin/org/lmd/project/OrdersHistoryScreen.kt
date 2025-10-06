@@ -1,4 +1,4 @@
-package org.example.project
+package org.lmd.project
 
 import android.net.Uri
 import androidx.compose.foundation.background
@@ -26,20 +26,21 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.koin.androidx.compose.koinViewModel
-import org.example.project.orderhistory.OrderHistoryViewModel
-import org.example.project.orderhistory.domain.model.OrderHistoryStatus
-import org.example.project.orderhistory.domain.model.OrderHistoryUi
-import org.example.project.orderhistory.report.AndroidOrdersPdfExporter
-import org.example.project.orderhistory.ui.ReportMeta
-import org.example.project.orderhistory.ui.toSummary
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlinx.coroutines.launch
+import org.lmd.project.navigation.NavigationHandler
+import org.lmd.project.orderhistory.OrderHistoryViewModel
+import org.lmd.project.orderhistory.domain.model.OrderHistoryStatus
+import org.lmd.project.orderhistory.domain.model.OrderHistoryUi
+import org.lmd.project.orderhistory.report.AndroidOrdersPdfExporter
+import org.lmd.project.orderhistory.ui.ReportMeta
+import org.lmd.project.orderhistory.ui.toSummary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OrdersHistoryScreen() {
+fun OrdersHistoryScreen(navigationHandler: NavigationHandler,) {
     val vm: OrderHistoryViewModel = koinViewModel()
 
     val orders by vm.orders.collectAsState()
@@ -87,7 +88,10 @@ fun OrdersHistoryScreen() {
                                     title = "Orders History",
                                     filterSummary = vm.filter.value.toSummary(),
                                     generatedAt = "Generated: " +
-                                            SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date())
+                                            SimpleDateFormat(
+                                                "yyyy-MM-dd HH:mm",
+                                                Locale.getDefault()
+                                            ).format(Date())
                                 )
 
                                 android.util.Log.d("PDF", "Export start: count=${orders.size}, meta=${meta.filterSummary}")

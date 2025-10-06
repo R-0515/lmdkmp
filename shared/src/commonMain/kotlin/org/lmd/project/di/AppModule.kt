@@ -2,7 +2,6 @@ package org.lmd.project.di
 
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.websocket.WebSockets
-import kotlinx.coroutines.CoroutineDispatcher
 import org.lmd.project.location.data.repository.LocationRepositoryImpl
 import org.lmd.project.location.domain.repository.LocationRepository
 import org.lmd.project.location.domain.usecase.GetDeviceLocationsUseCase
@@ -13,11 +12,16 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.SupervisorJob
 import org.koin.core.qualifier.named
 import org.lmd.project.socket.SocketIntegration
-import org.lmd.project.BuildKonfig
-import org.lmd.project.SecureTokenStore
-import org.lmd.project.socket.ConsoleLogger
-import org.lmd.project.socket.Logger
-import org.lmd.project.socket.SocketConfig
+import org.lmd.project.delivery.data.api.DeliveriesLogApi
+import org.lmd.project.delivery.data.api.DeliveriesLogApiKtor
+import org.lmd.project.delivery.data.repositoryimpl.DeliveriesLogRepositoryImpl
+import org.lmd.project.delivery.domain.repository.DeliveriesLogRepository
+import org.lmd.project.delivery.domain.usecase.GetDeliveriesLogPageUseCase
+import org.lmd.project.orderhistory.data.api.OrdersHistoryApi
+import org.lmd.project.orderhistory.data.api.OrdersHistoryApiKtor
+import org.lmd.project.orderhistory.data.repositoryimpl.OrdersRepositoryImpl
+import org.lmd.project.orderhistory.domain.repository.OrdersRepository
+import org.lmd.project.orderhistory.domain.usecase.GetOrdersUseCase
 
 
 val locationCommonModule = module {
@@ -51,5 +55,15 @@ val socketModule = module {
             logger = get()
         )
     }
+}
+val deliveryModule = module {
+    single<DeliveriesLogApi> { DeliveriesLogApiKtor(tokenStore = get()) }
+    single<DeliveriesLogRepository> { DeliveriesLogRepositoryImpl(get()) }
+    factory { GetDeliveriesLogPageUseCase(get()) }
+}
+val orderHistoryModule = module {
+    single<OrdersHistoryApi> { OrdersHistoryApiKtor(tokenStore = get()) }
+    single<OrdersRepository> { OrdersRepositoryImpl(get()) }
+    factory { GetOrdersUseCase(get()) }
 }
 
