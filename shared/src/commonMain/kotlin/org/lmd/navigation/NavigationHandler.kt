@@ -1,4 +1,4 @@
-package org.example.navigation
+package org.lmd.navigation
 
 interface NavigationHandler {
     fun navigateToHome()

@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import org.example.project.auth.domain.usecase.LoginUseCase
-import org.example.project.core.utils.ApiResult
+import org.lmd.project.auth.domain.usecase.LoginUseCase
+import org.lmd.project.core.utils.ApiResult
 
 actual class LoginViewModel(
     private val loginUseCase: LoginUseCase

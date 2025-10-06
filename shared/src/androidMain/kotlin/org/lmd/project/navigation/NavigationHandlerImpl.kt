@@ -1,9 +1,9 @@
-package org.example.project.navigation
+package org.lmd.project.navigation
 
 import android.content.Context
 import android.widget.Toast
 import androidx.navigation.NavController
-import org.example.navigation.NavigationHandler
+import org.lmd.navigation.NavigationHandler
 
 class NavigationHandlerImpl(
     private val context: Context,

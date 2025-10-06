@@ -16,9 +16,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import org.example.navigation.NavigationHandler
-import org.example.project.auth.viewmodel.LoginUiState
-import org.example.project.auth.viewmodel.LoginViewModel
+import org.lmd.navigation.NavigationHandler
+import org.lmd.project.auth.viewmodel.LoginUiState
+import org.lmd.project.auth.viewmodel.LoginViewModel
 import org.koin.compose.koinInject
 
 @Composable

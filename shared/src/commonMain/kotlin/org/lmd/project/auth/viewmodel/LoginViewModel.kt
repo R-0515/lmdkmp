@@ -1,4 +1,4 @@
-package org.example.project.auth.viewmodel
+package org.lmd.project.auth.viewmodel
 
 
 import kotlinx.coroutines.flow.StateFlow
