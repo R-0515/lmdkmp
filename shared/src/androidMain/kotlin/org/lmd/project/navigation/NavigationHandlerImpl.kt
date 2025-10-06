@@ -20,15 +20,22 @@ class NavigationHandlerImpl(
             popUpTo("empty") { inclusive = true }
         }
     }
+
     override fun navigateToOrderHistory() {
         navController.navigate("orderHistory") {
             popUpTo("login") { inclusive = true }
         }
     }
+
     override fun navigateToDelivery() {
         navController.navigate("deliveriesLog") {
             popUpTo("login") { inclusive = true }
+        }
+    }
 
+    override fun navigateToGeneralPool() {
+        navController.navigate("generalPool") {
+            popUpTo("login") { inclusive = true }
         }
     }
 

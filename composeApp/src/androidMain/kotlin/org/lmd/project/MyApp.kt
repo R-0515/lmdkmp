@@ -11,6 +11,8 @@ import org.lmd.project.di.socketModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.startKoin
 import org.lmd.project.di.deliveryAndroidModule
+import org.lmd.project.di.generalPoolAndroidModule
+import org.lmd.project.di.generalPoolCommonModule
 import org.lmd.project.di.orderHistoryAndroidModule
 
 class MyApp : Application() {
@@ -28,6 +30,8 @@ class MyApp : Application() {
                     networkModule,
                     socketModule,
                     SecureTokenAndroidModule,
+                    generalPoolAndroidModule,
+                    generalPoolCommonModule,
                     deliveryAndroidModule,
                     orderHistoryAndroidModule,
                 ),

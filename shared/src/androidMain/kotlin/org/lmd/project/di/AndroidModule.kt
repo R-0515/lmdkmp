@@ -12,6 +12,9 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import org.lmd.project.orderhistory.OrderHistoryViewModel
 
+import org.lmd.project.UserStore
+import org.lmd.project.generalPool.vm.GeneralPoolViewModel
+import org.lmd.project.utils.AndroidUserStore
 
 val locationAndroidModule = module {
     // FusedLocationProviderClient (needs Context)
@@ -29,7 +32,22 @@ val SecureTokenAndroidModule = module {
 
     // Bind NetworkMonitor
     single { NetworkMonitor(androidContext()) }
+
+    // Bind UserStore
+    single<UserStore> { AndroidUserStore(androidContext()) }
 }
+
+val generalPoolAndroidModule = module {
+    viewModel {
+        GeneralPoolViewModel(
+            ordersRealtime = get(),
+            computeDistances = get(),
+            getDeviceLocations = get(),
+            loadOrdersUseCase = get(),
+        )
+    }
+}
+
 val deliveryAndroidModule = module {
     includes(deliveryModule)
 

@@ -49,6 +49,8 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
 
                 implementation("org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2")
+
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
             }
         }
 
