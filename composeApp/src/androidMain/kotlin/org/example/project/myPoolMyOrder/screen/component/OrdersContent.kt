@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import org.example.project.R
 import org.example.project.myPool.domian.model.OrderActions
 import org.example.project.myPool.domian.model.OrderStatus
+import org.example.project.myPool.ui.logic.OrderLogger
 import org.example.project.myPool.ui.model.LocalUiOnlyStatusBus
 import org.example.project.myPool.ui.model.OrderListCallbacks
 import org.example.project.myPoolMyOrder.screen.model.OrderListState
@@ -36,7 +37,7 @@ fun ordersContent(
         when {
             uiState.isLoading && uiState.orders.isEmpty() -> loadingView()
             uiState.errorMessage != null ->
-                errorView(uiState.errorMessage!!) { ordersVm.listVM.retry(context) }
+                errorView(uiState.errorMessage!!) { ordersVm.listVM.refreshOrders() }
 
             uiState.emptyMessage != null -> emptyView(uiState.emptyMessage!!)
             else ->
@@ -97,7 +98,7 @@ private fun buildOrderListCallbacks(
                 OrderActions.Deliver -> "Deliver"
                 OrderActions.Fail -> "DeliveryFailed"
             }
-        UpdateOrderStatusViewModel.OrderLogger.uiTap(orderId, order?.orderNumber, label)
+        OrderLogger().uiTap(orderId, order?.orderNumber, label)
         when (dialog) {
             OrderActions.Confirm -> deps.updateVm.update(orderId, OrderStatus.CONFIRMED)
             OrderActions.PickUp -> deps.updateVm.update(orderId, OrderStatus.PICKUP)
@@ -106,6 +107,6 @@ private fun buildOrderListCallbacks(
             OrderActions.Fail -> deps.updateVm.update(orderId, OrderStatus.DELIVERY_FAILED)
         }
     },
-    onRefresh = { ordersVm.listVM.refresh(context) },
-    onLoadMore = { ordersVm.listVM.loadNextPage(context) },
+    onRefresh = { ordersVm.listVM.refreshOrders() },
+    onLoadMore = { ordersVm.listVM.loadNextPage() },
 )

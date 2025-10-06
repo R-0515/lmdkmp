@@ -1,9 +1,8 @@
-package org.example.project.myPool.ui.viewmodel
+package org.example.project.myPool.ui.logic
 
 import org.example.project.myPool.domian.model.OrderInfo
 import org.example.project.myPool.domian.model.OrdersPage
 import org.example.project.myPool.ui.model.MyPoolLoadResult
-import java.util.LinkedHashMap
 import kotlin.coroutines.cancellation.CancellationException
 
 fun mergeById(

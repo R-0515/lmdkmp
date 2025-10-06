@@ -8,9 +8,11 @@ import io.ktor.client.plugins.RedirectResponseException
 import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
-import org.example.project.location.domain.model.ComputeDistancesUseCase
+import org.example.project.myPool.domian.usecase.ComputeDistancesUseCase
 import org.example.project.myPool.domian.model.OrderInfo
 import org.example.project.myPool.domian.model.OrderStatus
+import org.example.project.myPool.ui.logic.OrdersListHelpersCommon
+import org.example.project.myPool.ui.logic.OrdersStore
 import org.example.project.myPool.ui.model.LocalUiOnlyStatusBus
 import org.example.project.myPool.ui.state.MyOrdersUiState
 import java.io.IOException
@@ -18,59 +20,12 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import kotlin.math.min
 
-@Suppress("UnusedPrivateProperty")
-class OrdersListHelpers(
-    private val store: OrdersStore,
-    private val computeDistancesUseCase: ComputeDistancesUseCase,
+/**
+ * Android-specific extension functions that interact with Context and the LocalUiOnlyStatusBus.
+ */
+class OrdersListHelpersAndroid(
+    val helpers: OrdersListHelpersCommon,
 ) {
-    private val allowedStatuses =
-        setOf(
-            OrderStatus.ADDED,
-            OrderStatus.CONFIRMED,
-            OrderStatus.REASSIGNED,
-            OrderStatus.CANCELED,
-            OrderStatus.PICKUP,
-            OrderStatus.START_DELIVERY,
-        )
-
-    fun applyDisplayFilter(
-        list: List<OrderInfo>,
-        query: String,
-        currentUserId: String?,
-    ): List<OrderInfo> {
-        val q = query.trim()
-        val afterQuery =
-            if (q.isBlank()) {
-                list
-            } else {
-                list.filter { o ->
-                    o.orderNumber.contains(q, ignoreCase = true) ||
-                        o.name.contains(q, ignoreCase = true) ||
-                        (o.details?.contains(q, ignoreCase = true) == true)
-                }
-            }
-        val afterStatus = afterQuery.filter { it.status in allowedStatuses }
-        return if (currentUserId.isNullOrBlank()) {
-            afterStatus
-        } else {
-            afterStatus.filter { it.assignedAgentId == currentUserId }
-        }
-    }
-
-    fun computeDisplay(
-        location: Location?,
-        source: List<OrderInfo>,
-        query: String?,
-        uid: String?,
-    ): List<OrderInfo> {
-        val filtered = applyDisplayFilter(source, query.orEmpty(), uid)
-        return withDistances(location, filtered)
-    }
-
-    fun withDistances(
-        location: Location?,
-        list: List<OrderInfo>,
-    ): List<OrderInfo> = if (location != null) computeDistancesUseCase(location, list) else list
 
     fun handlePagingError(
         msg: String,
@@ -103,63 +58,13 @@ class OrdersListHelpers(
 
     fun messageFor(e: Exception): String =
         when (e) {
-            is ClientRequestException -> // 4xx errors
-                "Client error: ${e.response.status.value} ${e.response.status.description}"
-
-            is ServerResponseException -> // 5xx errors
-                "Server error: ${e.response.status.value} ${e.response.status.description}"
-
-            is RedirectResponseException -> // 3xx redirections
-                "Redirection: ${e.response.status.value}"
-
+            is ClientRequestException -> "Client error: ${e.response.status.value} ${e.response.status.description}"
+            is ServerResponseException -> "Server error: ${e.response.status.value} ${e.response.status.description}"
+            is RedirectResponseException -> "Redirection: ${e.response.status.value}"
             is HttpRequestTimeoutException -> "Request timed out"
             is UnknownHostException -> "No internet connection"
             is SocketTimeoutException -> "Request timed out"
             is IOException -> "Network error"
             else -> e.message ?: "Unknown error"
         }
-
-    fun publishFirstPageFrom(
-        state: MutableStateFlow<MyOrdersUiState>,
-        base: List<OrderInfo>,
-        pageSize: Int,
-        query: String,
-        endReached: Boolean,
-    ) {
-        val first = base.take(pageSize)
-        val emptyMsg =
-            when {
-                base.isEmpty() && query.isBlank() -> "No active orders."
-                base.isEmpty() && query.isNotBlank() -> "No matching orders."
-                else -> null
-            }
-        state.update {
-            it.copy(
-                isLoading = false,
-                isLoadingMore = false,
-                orders = first,
-                emptyMessage = emptyMsg,
-                errorMessage = null,
-                page = 1,
-                endReached = endReached,
-            )
-        }
-    }
-
-    fun publishAppendFrom(
-        state: MutableStateFlow<MyOrdersUiState>,
-        base: List<OrderInfo>,
-        page: Int,
-        pageSize: Int,
-        endReached: Boolean,
-    ) {
-        val visibleCount = min(page * pageSize, base.size)
-        state.update {
-            it.copy(
-                isLoadingMore = false,
-                orders = base.take(visibleCount),
-                endReached = endReached,
-            )
-        }
-    }
 }

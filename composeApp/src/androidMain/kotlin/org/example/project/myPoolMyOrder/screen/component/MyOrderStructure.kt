@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import org.example.project.R
 import org.example.project.myPool.domian.model.OrderInfo
 import org.example.project.myPool.domian.model.OrderStatus
+import org.example.project.myPool.ui.logic.OrderLogger
 import org.example.project.myPool.ui.model.MenuState
 import org.example.project.myPool.ui.viewmodel.UpdateOrderStatusViewModel
 import java.util.Locale
@@ -270,7 +271,7 @@ private fun menuItems(
         enabled = enabled,
         onClick = {
             menuState.onDismiss()
-            UpdateOrderStatusViewModel.OrderLogger.uiTap(order.id, order.orderNumber, "Menu:PickUp")
+            OrderLogger().uiTap(order.id, order.orderNumber, "Menu:PickUp")
             menuState.onPickUp()
         },
     )
@@ -279,7 +280,7 @@ private fun menuItems(
         enabled = enabled, // status is CONFIRMED here
         onClick = {
             menuState.onDismiss()
-            UpdateOrderStatusViewModel.OrderLogger.uiTap(order.id, order.orderNumber, "Menu:Cancel")
+            OrderLogger().uiTap(order.id, order.orderNumber, "Menu:Cancel")
             menuState.onCancel()
         },
     )
@@ -288,7 +289,7 @@ private fun menuItems(
         enabled = enabled,
         onClick = {
             menuState.onDismiss()
-            UpdateOrderStatusViewModel.OrderLogger.uiTap(
+            OrderLogger().uiTap(
                 order.id,
                 order.orderNumber,
                 "Menu:Reassign"

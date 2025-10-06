@@ -18,17 +18,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.launch
 import org.example.project.R
 import org.example.project.SecureTokenStore
 import org.example.project.UserStore
@@ -36,6 +33,8 @@ import org.example.project.location.domain.repository.LocationProvider
 import org.example.project.location.screen.permissions.locationPermissionHandler
 import org.example.project.map.domain.model.toMapMarker
 import org.example.project.myPool.domian.model.OrderStatus
+import org.example.project.myPool.domian.mapper.toCoordinates
+import org.example.project.myPool.ui.logic.OrderLogger
 import org.example.project.myPool.ui.model.AgentsState
 import org.example.project.myPool.ui.model.MyOrdersPoolUiState
 import org.example.project.myPoolMyOrder.screen.model.OrdersBodyDeps
@@ -48,12 +47,10 @@ import org.example.project.myPool.ui.viewmodel.MyOrdersViewModel
 import org.example.project.myPool.ui.viewmodel.MyPoolViewModel
 import org.example.project.myPool.ui.viewmodel.UpdateOrderStatusViewModel
 import org.example.project.myPoolMyOrder.screen.component.bottomStickyButton
-import org.example.project.myPoolMyOrder.screen.component.map.initialCameraPositionEffect
 import org.example.project.myPoolMyOrder.screen.component.map.provideMapStates
 import org.example.project.myPoolMyOrder.screen.component.ordersContent
 import org.example.project.myPoolMyOrder.screen.component.ordersEffects
 import org.example.project.myPoolMyOrder.screen.component.reassignBottomSheet
-import org.example.project.util.AndroidUserStore
 import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
@@ -186,7 +183,7 @@ private fun reassignSheet(
             val orderId = deps.reassignOrderId.value ?: return@reassignBottomSheet
             Log.d("ReassignFlow", "onSelect: orderId=$orderId → newAssignee=${user.id}")
 
-            UpdateOrderStatusViewModel.OrderLogger.uiTap(
+            OrderLogger().uiTap(
                 orderId,
                 uiOrders.orders.firstOrNull { it.id == orderId }?.orderNumber,
                 "Menu:Reassign→${user.name}",
@@ -290,8 +287,11 @@ private fun forwardMyPoolLocationToMyOrders(
     poolVm: MyPoolViewModel,
     ordersVm: MyOrdersViewModel,
 ) {
-    val lastLoc by poolVm.lastLocation.collectAsState(initial = null)
-    LaunchedEffect(lastLoc) { ordersVm.listVM.updateDeviceLocation(lastLoc) }
+    // Collect the current Location? from MyPoolViewModel
+    val lastLoc = poolVm.lastLocation.collectAsState(initial = null).value
+    // Convert to Coordinates? (your mapper)
+    val coords = lastLoc?.toCoordinates()
+    LaunchedEffect(lastLoc) { ordersVm.listVM.updateDeviceLocation(coords) }
 }
 
 // Handle search for orders

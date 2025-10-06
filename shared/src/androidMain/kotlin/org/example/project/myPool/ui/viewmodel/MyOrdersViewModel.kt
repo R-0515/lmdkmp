@@ -2,39 +2,38 @@ package org.example.project.myPool.ui.viewmodel
 
 import android.location.Location
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import org.example.project.UserStore
-import org.example.project.location.domain.model.ComputeDistancesUseCase
+import org.example.project.myPool.domian.mapper.toCoordinates
+import org.example.project.myPool.domian.usecase.ComputeDistancesUseCase
+import org.example.project.socket.Coordinates
 import org.example.project.myPool.domian.usecase.GetMyOrdersUseCase
-import org.example.project.myPool.ui.state.MyOrdersUiState
+import org.example.project.myPool.ui.logic.MyOrdersLogic
 
 class MyOrdersViewModel(
     getMyOrders: GetMyOrdersUseCase,
     computeDistancesUseCase: ComputeDistancesUseCase,
-    private val userStore: UserStore,
+    userStore: UserStore,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(MyOrdersUiState(isLoading = false))
-    val uiState: StateFlow<MyOrdersUiState> = _uiState.asStateFlow()
 
-    private val currentUserId = MutableStateFlow<String?>(userStore.toString())
-    private val deviceLocation = MutableStateFlow<Location?>(null)
+    private val currentUserId = MutableStateFlow<String?>(userStore.getUserId())
+    private val deviceLocation = MutableStateFlow<Coordinates?>(null)
 
-    // Shared store across sub-ViewModels
-    private val store =
-        OrdersStore(
-            state = _uiState,
-            currentUserId = currentUserId,
-            deviceLocation = deviceLocation,
-            allOrders = mutableListOf(),
-        )
+    private val logic = MyOrdersLogic(
+        getMyOrders = getMyOrders,
+        computeDistancesUseCase = computeDistancesUseCase,
+        currentUserId = currentUserId,
+        deviceLocation = deviceLocation,
+        scope = viewModelScope,
+    )
 
-    val listVM = OrdersListViewModel(store, getMyOrders, computeDistancesUseCase)
-    val searchVM = OrdersSearchViewModel(store)
-    val statusVM = OrdersStatusViewModel(store)
+    val uiState = logic.uiState
+    val listVM = logic.listVM
+    val searchVM = logic.searchVM
+    val statusVM = logic.statusVM
 
-    init {
-        listVM.refreshOrders()
+    fun updateDeviceLocation(location: Location?) {
+        deviceLocation.value = location?.toCoordinates()
     }
 }

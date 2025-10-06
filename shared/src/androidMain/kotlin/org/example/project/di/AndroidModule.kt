@@ -20,7 +20,7 @@ import org.example.project.auth.data.AuthRepositoryImpl
 import org.example.project.auth.domain.repository.AuthRepository
 import org.example.project.auth.domain.usecase.LoginUseCase
 import org.example.project.location.data.repository.AndroidLocationProvider
-import org.example.project.location.domain.model.ComputeDistancesUseCase
+import org.example.project.myPool.domian.usecase.ComputeDistancesUseCase
 import org.example.project.location.domain.repository.LocationProvider
 import org.example.project.myPool.ui.viewmodel.ActiveAgentsViewModel
 import org.example.project.myPool.ui.viewmodel.MyOrdersViewModel

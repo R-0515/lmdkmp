@@ -54,7 +54,7 @@ fun ordersEffects(
     }
     LaunchedEffect(shouldLoadMore, uiState.isRefreshing, uiState.isLoading) {
         if (shouldLoadMore && !uiState.isRefreshing && !uiState.isLoading) {
-            vm.listVM.loadNextPage(context)
+            vm.listVM.loadNextPage()
         }
     }
 }
@@ -64,7 +64,7 @@ private fun ordersInitialLoadEffect(
     vm: MyOrdersViewModel,
     context: Context,
 ) {
-    LaunchedEffect(Unit) { vm.listVM.loadOrders(context) }
+    LaunchedEffect(Unit) { vm.listVM.loadOrders() }
 }
 
 @Composable

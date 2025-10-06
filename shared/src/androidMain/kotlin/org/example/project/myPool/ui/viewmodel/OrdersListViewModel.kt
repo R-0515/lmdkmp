@@ -1,64 +1,53 @@
 package org.example.project.myPool.ui.viewmodel
 
-import android.content.Context
 import android.location.Location
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.update
-import org.example.project.location.domain.model.ComputeDistancesUseCase
+import org.example.project.myPool.domian.mapper.toCoordinates
+import org.example.project.myPool.domian.usecase.ComputeDistancesUseCase
 import org.example.project.myPool.domian.usecase.GetMyOrdersUseCase
+import org.example.project.myPool.ui.logic.*
+
+/**
+ * Android ViewModel wrapper that connects the shared logic with Android Context and lifecycle.
+ */
 
 class OrdersListViewModel(
     private val store: OrdersStore,
     getMyOrders: GetMyOrdersUseCase,
     computeDistancesUseCase: ComputeDistancesUseCase,
 ) : ViewModel() {
-    private val helpers = OrdersListHelpers(store, computeDistancesUseCase)
 
+    private val commonHelpers = OrdersListHelpersCommon(computeDistancesUseCase)
+    private val helpers = OrdersListHelpersAndroid(commonHelpers)
     private val pager = OrdersPager(getMyOrders)
-    private val publisher = OrdersListPublisher(store, helpers)
+    private val publisher = OrdersListPublisher(store, commonHelpers)
     private val errors = OrdersListErrorHandler(store, helpers)
     private val throttle = OrdersThrottle()
 
-    // orchestrator
-    private val deps =
-        OrdersListControllerDeps(
+    private val controller = OrdersListController(
+        deps = OrdersListControllerDeps(
             store = store,
             pager = pager,
             publisher = publisher,
-            errors = errors,
             throttle = throttle,
-        )
+        ),
+        scope = viewModelScope,
+        onError = { msg, retry -> errors.postError(msg, retry) },
+    )
 
-    private val controller =
-        OrdersListController(
-            deps = deps,
-            scope = viewModelScope,
-        )
+    fun setCurrentUserId(id: String?) = controller.setCurrentUserId(id)
+    fun loadOrders() = controller.refreshStrict()
+    fun refreshOrders() = controller.refreshStrict()
+    fun loadNextPage() = controller.loadNextPage()
 
-    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     fun updateDeviceLocation(location: Location?) {
-        store.deviceLocation.value = location
-        if (location != null &&
-            store.state.value.orders
-                .isNotEmpty()
-        ) {
-            val computed = helpers.withDistances(location, store.state.value.orders)
+        val coords = location?.toCoordinates()
+        store.deviceLocation.value = coords
+        if (coords != null && store.state.value.orders.isNotEmpty()) {
+            val computed = commonHelpers.withDistances(coords, store.state.value.orders)
             store.state.update { it.copy(orders = computed) }
         }
     }
-
-    fun setCurrentUserId(id: String?) = controller.setCurrentUserId(id)
-
-    fun loadOrders(context: Context) = controller.loadInitial(context)
-
-    fun retry(context: Context) = controller.loadInitial(context)
-
-    fun refresh(context: Context) = controller.refresh(context)
-
-    fun refreshOrders() = controller.refreshStrict()
-
-    fun loadNextPage(context: Context) = controller.loadNextPage(context)
 }
