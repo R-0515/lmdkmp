@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.lmd.navigation.NavigationHandler
+import org.lmd.project.navigation.NavigationHandler
 import org.lmd.project.auth.viewmodel.LogoutViewModel
 import org.koin.compose.koinInject
 

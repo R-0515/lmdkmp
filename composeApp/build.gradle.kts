@@ -1,3 +1,4 @@
+import org.gradle.kotlin.dsl.implementation
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 import kotlin.apply
@@ -29,18 +30,27 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation("com.google.android.gms:play-services-location:21.0.1")
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
-            // Google Maps
-            implementation(libs.play.services.maps)
-            implementation(libs.maps.compose)
-            implementation(libs.play.services.location)
-            // Compose
-            implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
-            implementation("com.google.android.gms:play-services-location:21.0.1")
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
-            //  Koin for Compose (Android only)
+            implementation(libs.androidx.compose.bom)
+            implementation(libs.androidx.compose.ui)
+            implementation(libs.androidx.compose.ui.tooling.preview)
+            implementation(libs.androidx.compose.foundation)
+            implementation(libs.androidx.compose.material3)
+            implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.androidx.lifecycle.viewmodelCompose)
+            // Coroutines on Android
+            implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.play.services.location.v2101)
+            implementation(libs.kotlinx.coroutines.play.services)
+            // horizontal list library
+            implementation("com.github.shsaudhrb:HorizontalList:0882e3c3a0")
+            // vertical list library
+            implementation("com.github.etharalrehaili4:verticallist:834045a12a")
+            //Koin
             implementation("io.insert-koin:koin-android:3.5.6")
             implementation("io.insert-koin:koin-androidx-compose:3.5.6")
+            // Icons
+            implementation(libs.androidx.material.icons.extended)
+            implementation(libs.androidx.material)
 
         }
         commonMain.dependencies {
@@ -51,11 +61,12 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
-            implementation(libs.androidx.lifecycle.runtimeCompose)
+           // implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(projects.shared)
             implementation("androidx.navigation:navigation-compose:2.8.4")
             //Koin
             implementation(libs.koin.android)
+            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
 
         }
         commonTest.dependencies {

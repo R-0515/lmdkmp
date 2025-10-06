@@ -16,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import org.lmd.navigation.NavigationHandler
+import org.lmd.project.navigation.NavigationHandler
 import org.lmd.project.auth.viewmodel.LoginUiState
 import org.lmd.project.auth.viewmodel.LoginViewModel
 import org.koin.compose.koinInject
@@ -71,7 +71,9 @@ fun LoginScreen(
         when (uiState) {
             is LoginUiState.Success -> {
                 navigationHandler.showMessage("Login Success 🎉")
-                navigationHandler.navigateToHome()
+               // navigationHandler.navigateToHome()
+               // navigationHandler.navigateToOrderHistory()
+                navigationHandler.navigateToDelivery()
             }
             is LoginUiState.Error -> {
                 navigationHandler.showMessage((uiState as LoginUiState.Error).message)

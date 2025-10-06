@@ -3,7 +3,8 @@ package org.lmd.project
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import org.lmd.navigation.NavigationHandler
+import org.example.project.DeliveriesLogScreen
+import org.lmd.project.navigation.NavigationHandler
 import org.lmd.project.auth.ui.EmptyScreen
 import org.lmd.project.auth.ui.LoginScreen
 
@@ -20,5 +21,7 @@ fun AppNavGraph(navController: androidx.navigation.NavHostController, navigation
         composable("empty") {
             EmptyScreen(navigationHandler = navigationHandler)
         }
+        composable("deliveriesLog") { DeliveriesLogScreen(navigationHandler = navigationHandler) }
+        composable("orderHistory") { OrdersHistoryScreen(navigationHandler = navigationHandler) }
     }
 }
