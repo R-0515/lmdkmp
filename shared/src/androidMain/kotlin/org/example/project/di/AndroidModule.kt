@@ -32,12 +32,12 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-
 val androidAuthModule = module {
     single<SecureTokenStore> { SecureTokenStoreImpl(androidContext()) }
 
     // Secure user store
     single<UserStore> { AndroidUserStore(androidContext()) }
+
     // Base client (no auth) - only for refresh
     single<HttpClient>(named("baseClient")) {
         HttpClient(OkHttp) {
@@ -73,8 +73,8 @@ val androidAuthModule = module {
 
 
     factory { LoginUseCase(get(), get()) }
-
 }
+
 val locationAndroidModule = module {
     // FusedLocationProviderClient (needs Context)
     single { LocationServices.getFusedLocationProviderClient(androidContext()) }

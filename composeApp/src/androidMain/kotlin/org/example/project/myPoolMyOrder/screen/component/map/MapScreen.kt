@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.Circle
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapEffect
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
@@ -79,7 +80,7 @@ private fun initialCenterEffect(
         }
     }
 }
-
+/*
 @Composable
 private fun googleMapContent(
     config: MapConfig,
@@ -120,8 +121,60 @@ private fun googleMapContent(
             markerState = markerState,
         )
     }
-}
+}*/
+@Composable
+private fun googleMapContent(
+    config: MapConfig,
+    chrome: MapChrome,
+    modifier: Modifier = Modifier,
+) {
+    val (cameraPositionState, markerState) = config.mapStates.asGoogleMapsStates()
 
+    GoogleMap(
+        modifier = modifier,
+        cameraPositionState = cameraPositionState,
+        properties = MapProperties(isMyLocationEnabled = config.canShowMyLocation),
+        uiSettings = MapUiSettings(
+            zoomControlsEnabled = true,
+            myLocationButtonEnabled = true
+        ),
+        contentPadding = PaddingValues(top = chrome.top, bottom = chrome.bottom),
+    ) {
+
+        // ✅ Insert this inside GoogleMap scope
+        if (config.ui.markers.isNotEmpty()) {
+            val selected = config.ui.markers.firstOrNull { it.id == config.ui.selectedMarkerId }
+                ?: config.ui.markers.first()
+
+            MapEffect(config.ui.markers, config.ui.selectedMarkerId) { map ->
+                val latLng = selected.coordinates.toLatLng()
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14f))
+            }
+        }
+
+        distanceCircle(
+            deviceLatLng = config.deviceCoords,
+            distanceKm = config.ui.distanceThresholdKm,
+        )
+
+        otherMarkers(
+            markers = config.ui.markers,
+            selectedMarkerId = config.ui.selectedMarkerId,
+        )
+
+        selectedMarkerPositionEffect(
+            selected = config.ui.markers.find { it.id == config.ui.selectedMarkerId },
+            markerState = markerState,
+        )
+
+        selectedMarker(
+            selected = config.ui.markers.find { it.id == config.ui.selectedMarkerId },
+            hasLocationPerm = config.ui.hasLocationPerm,
+            thresholdKm = config.ui.distanceThresholdKm,
+            markerState = markerState,
+        )
+    }
+}
 @Composable
 private fun overlayHeights(): Pair<Dp, Dp> {
     val screenH = LocalConfiguration.current.screenHeightDp.dp

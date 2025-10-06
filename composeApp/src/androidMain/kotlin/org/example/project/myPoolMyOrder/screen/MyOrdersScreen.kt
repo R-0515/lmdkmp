@@ -3,6 +3,7 @@ package org.example.project.myPoolMyOrder.screen
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.annotation.RequiresExtension
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -29,6 +30,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import org.example.project.R
+import org.example.project.SecureTokenStore
 import org.example.project.UserStore
 import org.example.project.location.domain.repository.LocationProvider
 import org.example.project.location.screen.permissions.locationPermissionHandler
@@ -56,6 +58,7 @@ import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,6 +73,18 @@ fun myOrdersScreen(
     val snack = remember { SnackbarHostState() }
     val listState = rememberLazyListState()
     val reassignOrderId = remember { mutableStateOf<String?>(null) }
+
+    val tokenStore: SecureTokenStore = koinInject()
+
+    LaunchedEffect(Unit) {
+        val token = tokenStore.getAccessToken()
+        if (token.isNullOrEmpty()) {
+            println("⚠️ Token is empty — skipping initial orders fetch")
+            return@LaunchedEffect
+        }
+
+        ordersVm.listVM.refreshOrders()
+    }
 
     wireMyOrders(
         WireDeps(
@@ -191,6 +206,7 @@ private fun reassignSheet(
     )
 }
 
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @Composable
 private fun wireMyOrders(deps: WireDeps) {
@@ -203,6 +219,7 @@ private fun wireMyOrders(deps: WireDeps) {
     observeOrdersSearch(deps.navController, deps.ordersVm)
 }
 
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @Composable
 fun myOrdersLocationSection(
@@ -213,9 +230,9 @@ fun myOrdersLocationSection(
     val context = LocalContext.current
 
     locationPermissionHandler(
-        onPermissionGranted = { ctx ->
+        onPermissionGranted = { context ->
             val fused = LocationServices
-                    .getFusedLocationProviderClient(ctx)
+                    .getFusedLocationProviderClient(context)
             fused.lastLocation.addOnSuccessListener { loc ->
                 deps.poolVm.updateDeviceLocation(loc)
             }
@@ -224,12 +241,6 @@ fun myOrdersLocationSection(
 
     val markers = poolUi.orders.map { it.toMapMarker() }
     val mapStates = provideMapStates()
-
-    initialCameraPositionEffect(
-        markers = markers,
-        selectedMarkerId = poolUi.selectedOrderNumber,
-        mapStates = mapStates,
-    )
 
     forwardMyPoolLocationToMyOrders(deps.poolVm, deps.ordersVm)
 }
@@ -272,6 +283,7 @@ private fun myOrdersEffectsSection(
     }
 }
 
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @Composable
 private fun forwardMyPoolLocationToMyOrders(

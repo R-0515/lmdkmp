@@ -24,8 +24,6 @@ import org.example.project.myPool.domian.repository.UsersRepository
 import org.example.project.myPool.domian.usecase.GetActiveUsersUseCase
 import org.example.project.myPool.domian.usecase.GetMyOrdersUseCase
 import org.example.project.myPool.domian.usecase.UpdateOrderStatusUseCase
-import org.koin.core.qualifier.named
-
 
 val locationCommonModule = module {
     // Repository API (depends on LocationProvider)
@@ -77,5 +75,6 @@ val MyOrderMyPoolModuleRepos =
 val authCommonModule = module {
 
     // UseCase
-    factory { LoginUseCase(get(), get()) }}
+    factory { LoginUseCase(get(), get()) }
+}
 

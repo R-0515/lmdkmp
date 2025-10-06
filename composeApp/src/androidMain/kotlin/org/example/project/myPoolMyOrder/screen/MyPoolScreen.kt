@@ -1,5 +1,7 @@
 package org.example.project.myPoolMyOrder.screen
 
+import android.os.Build
+import androidx.annotation.RequiresExtension
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -48,6 +50,7 @@ import org.koin.androidx.compose.koinViewModel
 
 // Zero fallback coordinates
 private val ZERO_COORDS = Coordinates(0.0, 0.0)
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @Composable
 fun myPoolScreen(
 /*
@@ -79,7 +82,7 @@ fun myPoolScreen(
             },
     )
     val mapStates = provideMapStates()
-    initialCameraPositionEffect(ui.markers, ui.selectedMarkerId, mapStates)
+    //initialCameraPositionEffect(ui.markers, ui.selectedMarkerId, mapStates)
 
     val state = overlayState(ui, bottomBarHeight, mapStates)
     val callbacks =
