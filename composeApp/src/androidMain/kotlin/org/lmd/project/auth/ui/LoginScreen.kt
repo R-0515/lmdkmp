@@ -73,7 +73,8 @@ fun LoginScreen(
                 navigationHandler.showMessage("Login Success 🎉")
                // navigationHandler.navigateToHome()
                // navigationHandler.navigateToOrderHistory()
-                navigationHandler.navigateToDelivery()
+//                navigationHandler.navigateToDelivery()
+                navigationHandler.navigateToGeneralPool()
             }
             is LoginUiState.Error -> {
                 navigationHandler.showMessage((uiState as LoginUiState.Error).message)

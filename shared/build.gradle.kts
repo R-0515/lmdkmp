@@ -63,7 +63,6 @@ kotlin {
                 implementation(libs.play.services.maps)
                 implementation(libs.maps.compose)
                 implementation(libs.play.services.location)
-                implementation(libs.ktor.client.android)
                 implementation("androidx.navigation:navigation-compose:2.8.2")
             }
         }

@@ -5,5 +5,6 @@ interface NavigationHandler {
     fun navigateToLogin()
     fun navigateToOrderHistory()
     fun navigateToDelivery()
+    fun navigateToGeneralPool()
     fun showMessage(message: String)
 }

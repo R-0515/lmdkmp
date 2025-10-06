@@ -44,6 +44,7 @@ import org.lmd.project.R
 import org.lmd.project.UserStore
 import org.lmd.project.location.screen.permissions.locationPermissionHandler
 import org.lmd.project.map.components.mapCenter
+import org.lmd.project.navigation.NavigationHandler
 
 // Map / Camera behavior
 private const val INITIAL_MAP_ZOOM = 12f
@@ -51,7 +52,7 @@ private const val ORDER_FOCUS_ZOOM = 14f
 
 @Composable
 fun generalPoolScreen(
-    navController: NavController,
+    navigationHandler: NavigationHandler,
     generalPoolViewModel: GeneralPoolViewModel = koinViewModel(),
 ) {
     val context = LocalContext.current

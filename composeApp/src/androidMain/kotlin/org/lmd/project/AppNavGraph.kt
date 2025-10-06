@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import org.example.project.DeliveriesLogScreen
+import org.example.project.generalPool.generalPoolScreen
 import org.lmd.project.navigation.NavigationHandler
 import org.lmd.project.auth.ui.EmptyScreen
 import org.lmd.project.auth.ui.LoginScreen
@@ -23,5 +24,7 @@ fun AppNavGraph(navController: androidx.navigation.NavHostController, navigation
         }
         composable("deliveriesLog") { DeliveriesLogScreen(navigationHandler = navigationHandler) }
         composable("orderHistory") { OrdersHistoryScreen(navigationHandler = navigationHandler) }
+        composable("generalPool") { generalPoolScreen(navigationHandler = navigationHandler) }
+
     }
 }
